@@ -1,0 +1,1 @@
+{"root":["./src/App.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/SignalLab.test.tsx","./src/components/SignalLab.tsx","./src/lib/signal.test.ts","./src/lib/signal.ts","./src/test/setup.ts"],"version":"5.9.3"}

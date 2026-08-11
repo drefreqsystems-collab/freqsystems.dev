@@ -1,0 +1,135 @@
+.lab {
+  background: linear-gradient(180deg, var(--bg-elev), var(--bg-elev-2));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+
+.lab__head h2 {
+  font-size: 1.6rem;
+}
+
+.lab__head p {
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 10px 0 0;
+}
+
+.lab__scope {
+  margin: 24px 0;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(0deg, rgba(56, 189, 248, 0.05), rgba(56, 189, 248, 0.05)),
+    repeating-linear-gradient(90deg, transparent 0 39px, rgba(56, 189, 248, 0.08) 39px 40px),
+    repeating-linear-gradient(0deg, transparent 0 39px, rgba(56, 189, 248, 0.08) 39px 40px),
+    #060b17;
+  overflow: hidden;
+}
+
+.lab__scope svg {
+  display: block;
+  width: 100%;
+  height: 220px;
+}
+
+.lab__axis {
+  stroke: rgba(147, 162, 194, 0.35);
+  stroke-width: 1;
+  stroke-dasharray: 4 6;
+}
+
+.lab__trace {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.7));
+}
+
+.lab__waveforms {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.lab__wave {
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.lab__wave:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.lab__wave--active {
+  background: rgba(56, 189, 248, 0.16);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.lab__controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.lab__control {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.lab__control output {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  min-width: 56px;
+  text-align: right;
+}
+
+.lab__control input[type='range'] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.lab__metrics {
+  display: flex;
+  gap: 28px;
+  margin: 26px 0 0;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+
+.lab__metrics dt {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.lab__metrics dd {
+  margin: 6px 0 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 560px) {
+  .lab__control {
+    grid-template-columns: 80px 1fr auto;
+  }
+}
