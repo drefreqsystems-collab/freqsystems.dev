@@ -1,0 +1,65 @@
+/* FREQUENCY SYSTEMS — COLOR TOKENS
+   The palette is sovereign and disciplined. Two near-black surfaces,
+   electric blue + violet + silver (matching the orbital brand mark),
+   indigo for structure, and a tightly-rationed set of signal colors.
+
+   THE RULE THAT NEVER BREAKS:
+   --signal-live (electric blue) is for LIVE DATA ONLY — telemetry numbers,
+   scan beams, status dots. Never on a headline, never on a button,
+   never as decoration. */
+
+:root {
+  /* ---- Base surfaces (Dark Matter) ---- */
+  --dm-bg:        #080C18;  /* page background, everywhere */
+  --dm-panel:     #0D1220;  /* card & panel surfaces */
+  --dm-panel-2:   #111829;  /* raised / nested panel */
+
+  /* ---- Structure ---- */
+  --indigo:       #6366F1;  /* borders, dividers, structural lines */
+  --indigo-700:   #4044C9;  /* pressed / deeper structural line */
+  --indigo-300:   #A5A8F7;  /* lifted structural accent */
+  --violet:       #8B5CF6;  /* brand-mark violet — ambient glows, gradient ends */
+  --silver:       #C9D2E2;  /* metallic silver — wordmark, emphasis details */
+
+  /* ---- Live data (RATIONED — telemetry only) ---- */
+  --signal-live:  #38BDF8;  /* electric blue — live data ONLY */
+
+  /* ---- Text ---- */
+  --white:        #FFFFFF;  /* headlines */
+  --gray-100:     #E2E8F0;  /* strong body / emphasis */
+  --gray-300:     #CBD5E1;  /* body text */
+  --gray-500:     #8A97AD;  /* muted / captions / labels */
+  --gray-700:     #5A667E;  /* faint / disabled */
+
+  /* ---- Status (semantic) ---- */
+  --status-active:   #38BDF8;  /* electric blue — "Active" (live = blue, always) */
+  --status-pending:  #F59E0B;  /* amber — "Pending" */
+  --status-fault:    #EF4444;  /* red   — "Fault" */
+
+  /* ---- Tints (low-alpha washes for surfaces, derived from the above) ---- */
+  --indigo-wash:     rgba(99, 102, 241, 0.10);
+  --indigo-line:     rgba(99, 102, 241, 0.28);  /* default panel border */
+  --indigo-line-2:   rgba(99, 102, 241, 0.16);  /* faint divider */
+  --live-wash:       rgba(56, 189, 248, 0.12);
+  --live-glow:       rgba(56, 189, 248, 0.45);
+  --active-wash:     rgba(56, 189, 248, 0.14);
+  --violet-wash:     rgba(139, 92, 246, 0.12);
+  --pending-wash:    rgba(245, 158, 11, 0.14);
+  --fault-wash:      rgba(239, 68, 68, 0.14);
+
+  /* ---- Semantic aliases (use these in components) ---- */
+  --bg-page:         var(--dm-bg);
+  --surface-card:    var(--dm-panel);
+  --surface-raised:  var(--dm-panel-2);
+  --border-default:  var(--indigo-line);
+  --border-faint:    var(--indigo-line-2);
+  --border-strong:   var(--indigo);
+
+  --text-headline:   var(--white);
+  --text-body:       var(--gray-300);
+  --text-strong:     var(--gray-100);
+  --text-muted:      var(--gray-500);
+  --text-faint:      var(--gray-700);
+
+  --data-live:       var(--signal-live);  /* telemetry numbers only */
+}

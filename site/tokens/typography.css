@@ -1,0 +1,45 @@
+/* Frequency Systems — TYPOGRAPHY TOKENS
+   Headlines: Space Grotesk (geometric, engineered)
+   Body: Inter (neutral, legible)
+   Numbers / codes / telemetry: JetBrains Mono (tabular, technical) */
+
+:root {
+  /* ---- Families ---- */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* ---- Weights ---- */
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* ---- Type scale (fluid-friendly fixed px) ---- */
+  --text-display:  64px;  /* hero headline */
+  --text-h1:       44px;
+  --text-h2:       32px;
+  --text-h3:       24px;
+  --text-lg:       20px;
+  --text-base:     16px;
+  --text-sm:       14px;
+  --text-xs:       12px;
+  --text-micro:    11px;  /* eyebrow / label caps */
+
+  /* ---- Line heights ---- */
+  --leading-tight:  1.05;
+  --leading-snug:   1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed:1.65;
+
+  /* ---- Letter spacing ---- */
+  --tracking-tight:  -0.02em;  /* large display */
+  --tracking-normal: 0;
+  --tracking-wide:   0.04em;
+  --tracking-caps:   0.18em;   /* eyebrow / mono labels, uppercase */
+
+  /* ---- Semantic roles ---- */
+  --role-eyebrow-size:    var(--text-micro);
+  --role-eyebrow-track:   var(--tracking-caps);
+  --role-telemetry-font:  var(--font-mono);
+}

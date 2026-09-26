@@ -1,0 +1,244 @@
+{
+  "project": {
+    "name": "frequency-tera-optimized",
+    "id": "prj_uFfwXlhNVcaVosfRrkp6Iy49lnUH",
+    "team": "team_X5LI2up5bH06FG6XJI2w5ToR",
+    "productionUrl": "https://frequency-tera-optimized.vercel.app"
+  },
+  "step": "01",
+  "baselineSource": {
+    "project": "frequency-mega",
+    "deployment": "dpl_9frhjqZ7DK6dVqVULkbpjM9tnC94"
+  },
+  "deployments": [
+    {
+      "step": "01",
+      "id": "dpl_A4DKwZ6rDBYQB4vZ9bJFc8EQkLGw",
+      "target": "production (superseded; instant-rollback target)",
+      "url": "https://frequency-tera-optimized-7p4pwrnng-freq-systems.vercel.app",
+      "what": "byte-identical clone of frequency-mega"
+    }
+  ],
+  "fileCount": 40,
+  "files": [
+    {
+      "path": "_ds_bundle.js",
+      "sha1": "a41a7e71cfa483824d3cb1eb9a442f30bd45ff61",
+      "bytes": 181641,
+      "inRepo": true
+    },
+    {
+      "path": "app.prod.js",
+      "sha1": "0bbf2a421ab60cd8b1066d22d4851b24a75ce5e5",
+      "bytes": 72930,
+      "inRepo": true
+    },
+    {
+      "path": "apple-touch-icon.png",
+      "sha1": "ffafed8a389a2ce1e7f706b2b9e7e24a1a00102d",
+      "inRepo": false
+    },
+    {
+      "path": "assets/apple-touch-icon.png",
+      "sha1": "465f2eb38d57989bfc5a2bca42ea57ebe3fe428f",
+      "inRepo": false
+    },
+    {
+      "path": "assets/architecture-diagram.jpg",
+      "sha1": "bd111addbf53fdedf3ce1a7792add51034745a3f",
+      "inRepo": false
+    },
+    {
+      "path": "assets/ballast.jpg",
+      "sha1": "3ef1e3dc4c5c9f2f4ac76ed47de5dccf91631d19",
+      "inRepo": false
+    },
+    {
+      "path": "assets/brand-poster.jpg",
+      "sha1": "499841fdeaa29bd6c78af4c0a3175e740cac8592",
+      "inRepo": false
+    },
+    {
+      "path": "assets/contact-hero.jpg",
+      "sha1": "0657af90b913b63ad0f12604e6b0a101a702c174",
+      "inRepo": false
+    },
+    {
+      "path": "assets/favicon-16.png",
+      "sha1": "01b887d869822c90302ab0c92c0b74b1d3ec06ee",
+      "inRepo": false
+    },
+    {
+      "path": "assets/favicon-32.png",
+      "sha1": "6e89f189ba5b09c7ea01fc685118d142a024bd47",
+      "inRepo": false
+    },
+    {
+      "path": "assets/final-survey.jpg",
+      "sha1": "807cdd883e19a540fffcabf9f80ee7065782711e",
+      "inRepo": false
+    },
+    {
+      "path": "assets/founder-portrait-v2.jpg",
+      "sha1": "d9eb714942c648c213e498dd54bc71bd85e93285",
+      "inRepo": false
+    },
+    {
+      "path": "assets/freq-emblem.jpg",
+      "sha1": "f96da6201a3a958d0c30ccbc0dff1e8dea9f43c4",
+      "inRepo": false
+    },
+    {
+      "path": "assets/hero-barge.jpg",
+      "sha1": "9bcf1e0001b938c9b2587a52cb9d5ccec5c1aca0",
+      "inRepo": false
+    },
+    {
+      "path": "assets/investor-hero.jpg",
+      "sha1": "85e37f4ade8fff8a9669c03ec2bf74fc047c2abd",
+      "inRepo": false
+    },
+    {
+      "path": "assets/og-poster.jpg",
+      "sha1": "9575a4497fc5e77c9cc1c5a498f6c6ffb7c949e9",
+      "inRepo": false
+    },
+    {
+      "path": "assets/phase-03-crane.jpg",
+      "sha1": "27f15d2dba9c89422cc2896ffd39cbb83cd79275",
+      "inRepo": false
+    },
+    {
+      "path": "assets/phase-04-cargo-v2.jpg",
+      "sha1": "65ded16a635b44305b34cfc5ad7bfd5de7b5cb17",
+      "inRepo": false
+    },
+    {
+      "path": "assets/phase-05-trim.jpg",
+      "sha1": "17be9dfcf39236a2c04945606142d11162fec58c",
+      "inRepo": false
+    },
+    {
+      "path": "assets/pre-survey.jpg",
+      "sha1": "fca581bb30dfccc0cca9141067da4099affc860c",
+      "inRepo": false
+    },
+    {
+      "path": "assets/sim-barge-402.jpg",
+      "sha1": "3e904040ae12db0eef3d82acb7bbbf5b8e289a5c",
+      "inRepo": false
+    },
+    {
+      "path": "data.js",
+      "sha1": "e58f6cf98aa715c705c4881766df3b6429c3f3ca",
+      "bytes": 2230,
+      "inRepo": true
+    },
+    {
+      "path": "depthstage.js",
+      "sha1": "32f9f8dbfe8ff9eb74b813db3342a39ce12929fd",
+      "bytes": 14729,
+      "inRepo": true
+    },
+    {
+      "path": "favicon-16.png",
+      "sha1": "660fbd5381fb6af163c183cfda2f6289eb7844bd",
+      "inRepo": false
+    },
+    {
+      "path": "favicon-32.png",
+      "sha1": "7ab4f08e18bcabe58eed88d644977c0ac5a7a75e",
+      "inRepo": false
+    },
+    {
+      "path": "harbor-stage.js",
+      "sha1": "7ddf09a0dc6339e42544cbff01e02257c75b66fb",
+      "bytes": 44275,
+      "inRepo": true
+    },
+    {
+      "path": "home-sections.js",
+      "sha1": "0a219d28de96e35325bd534398a8a3a355b2f267",
+      "bytes": 21247,
+      "inRepo": true
+    },
+    {
+      "path": "index.html",
+      "sha1": "1dee2d3b2aee6a305fee649225e5832c87b5215f",
+      "bytes": 18289,
+      "inRepo": true
+    },
+    {
+      "path": "llms.txt",
+      "sha1": "3174bd3e0af2070e808cc6a50cf86ad95c97f582",
+      "bytes": 1873,
+      "inRepo": true
+    },
+    {
+      "path": "robots.txt",
+      "sha1": "79b0fad9e0746bbf1e7372cd70a1a1830daea416",
+      "bytes": 69,
+      "inRepo": true
+    },
+    {
+      "path": "simulation-ground.js",
+      "sha1": "e2894d87f1f39edea9de6c3073ae8f5079f51e37",
+      "bytes": 38159,
+      "inRepo": true
+    },
+    {
+      "path": "sitemap.xml",
+      "sha1": "238799fdb477a00fc4999242b069d683374d00de",
+      "bytes": 215,
+      "inRepo": true
+    },
+    {
+      "path": "styles.css",
+      "sha1": "44d76d52e780300d8301a6593237f839490382ce",
+      "bytes": 385,
+      "inRepo": true
+    },
+    {
+      "path": "tokens/base.css",
+      "sha1": "33997cc39d2119081337275e61b2aeef376cec52",
+      "bytes": 2512,
+      "inRepo": true
+    },
+    {
+      "path": "tokens/colors.css",
+      "sha1": "984e878d9214445ae00f6c78ab7ca1daeb57ad42",
+      "bytes": 2823,
+      "inRepo": true
+    },
+    {
+      "path": "tokens/effects.css",
+      "sha1": "16ffd0ee5dc64250a530854a5cec668d62584432",
+      "bytes": 1422,
+      "inRepo": true
+    },
+    {
+      "path": "tokens/fonts.css",
+      "sha1": "52df54433a64d64e9c891d5b198513af1540dd91",
+      "bytes": 383,
+      "inRepo": true
+    },
+    {
+      "path": "tokens/spacing.css",
+      "sha1": "d89a021a71a96f6405e4b793e22db1a24a8b5f21",
+      "bytes": 796,
+      "inRepo": true
+    },
+    {
+      "path": "tokens/typography.css",
+      "sha1": "5e08b51125db02727af7d6f165b8d2a1e63607a5",
+      "bytes": 1392,
+      "inRepo": true
+    },
+    {
+      "path": "vercel.json",
+      "sha1": "a6c787067aa886f5feb89e9e38c76de80e4cb7da",
+      "bytes": 408,
+      "inRepo": true
+    }
+  ]
+}

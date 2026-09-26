@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FREQUENCY Systems — Cargo decisions, grounded in vessel state</title>
+<meta name="description" content="FREQUENCY Systems is a maritime operational intelligence company building the autonomous cargo execution layer for U.S. inland waterways. Initial focus: one terminal and one cargo-transfer workflow." />
+<meta name="theme-color" content="#080C18" />
+<meta property="og:title" content="FREQUENCY Systems — Cargo decisions, grounded in vessel state" />
+<meta property="og:description" content="A cargo-operations decision system for inland terminals. Pre-pilot." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://freqsystems.dev/" />
+<meta property="og:image" content="https://freqsystems.dev/assets/og-poster.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="FREQUENCY Systems — Cargo decisions, grounded in vessel state" />
+<meta name="twitter:description" content="A cargo-operations decision system for inland terminals. Pre-pilot." />
+<meta name="twitter:image" content="https://freqsystems.dev/assets/og-poster.jpg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Frequency Systems","url":"https://freqsystems.dev","email":"frequency.systems@outlook.com","description":"Maritime operational intelligence for U.S. inland waterways. Pre-pilot.","logo":"https://freqsystems.dev/assets/freq-emblem.png","slogan":"Frequency · Reliability · Execution · Quality"}</script>
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* Simulation-only motion keyframes (the one page with motion) */
+  @keyframes freqKinetic {
+    from { transform: translateY(10px); }
+    to   { transform: translateY(0); }
+  }
+  .freq-kinetic { animation: freqKinetic var(--dur-slow) var(--ease-out) both; }
+
+  @keyframes freqScan {
+    0%   { transform: rotate(-6deg); opacity: 0.2; }
+    50%  { transform: rotate(10deg); opacity: 0.9; }
+    100% { transform: rotate(-6deg); opacity: 0.2; }
+  }
+  .freq-scan { animation: freqScan 2.6s var(--ease-standard) infinite; }
+
+  /* Hover-to-probe scan on the simulation still */
+  @keyframes freqProbe {
+    0%   { top: 0;    opacity: 0; }
+    12%  { opacity: 0.85; }
+    88%  { opacity: 0.85; }
+    100% { top: 100%; opacity: 0; }
+  }
+  .freq-probe {
+    position: absolute; left: 0; right: 0; height: 2px; top: 0;
+    background: linear-gradient(90deg, transparent, var(--signal-live), transparent);
+    box-shadow: 0 0 14px 1px var(--live-glow);
+    animation: freqProbe 2.4s var(--ease-standard) infinite;
+    pointer-events: none; z-index: 3;
+  }
+
+  /* Entrance motion (Tubik: hero/entrance) — transform-only so content is never hidden */
+  @keyframes freqEnter { from { transform: translateY(14px); } to { transform: none; } }
+  .freq-enter { animation: freqEnter 620ms var(--ease-out) both; }
+
+  /* Loading shimmer on the survey-run progress fill (Tubik: loading) */
+  @keyframes freqShimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+  .freq-shimmer {
+    position: absolute; inset: 0; display: block;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+    animation: freqShimmer 1.6s var(--ease-standard) infinite;
+  }
+
+  /* Telemetry value accent (Tubik: attention) — re-types on phase change */
+  @keyframes freqAccent { from { transform: translateY(7px); } to { transform: none; } }
+  .freq-accent { display: inline-block; animation: freqAccent 480ms var(--ease-out) both; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .freq-kinetic, .freq-scan, .freq-probe, .freq-enter, .freq-shimmer, .freq-accent { animation: none; }
+    .freq-enter, .freq-accent { transform: none; }
+  }
+
+  /* ---- Per-phase scene (PhaseScene.jsx) — transform-only, photo always visible ---- */
+  @keyframes freqSceneIn { from { transform: scale(1.015); } to { transform: none; } }
+  .freq-scene { animation: freqSceneIn 520ms var(--ease-out) both; }
+  .ov-photo { animation: freqSceneIn 520ms var(--ease-out) both; }
+
+  /* HUD chips slide in (transform-only) */
+  @keyframes freqChipIn { from { transform: translateY(-6px); } to { transform: none; } }
+  .freq-chip {
+    display: flex; flex-direction: column; gap: 1px;
+    font-family: var(--font-mono); padding: 7px 11px;
+    background: rgba(8,12,24,0.6); border: 1px solid rgba(56,189,248,0.3);
+    border-radius: var(--radius-sm); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+    animation: freqChipIn 420ms var(--ease-out) both;
+  }
+
+  /* ---- Energetic motion overlays (over the realistic photo) ---- */
+  .ov { position: absolute; inset: 0; pointer-events: none; z-index: 3; overflow: hidden; }
+
+  /* LiDAR scan sweep (phases 01 & 06) */
+  .ov-scanline {
+    position: absolute; left: 0; right: 0; height: 40%; top: -40%;
+    background: linear-gradient(180deg, transparent, rgba(56,189,248,0.16) 60%, rgba(56,189,248,0.55));
+    border-bottom: 1.5px solid #7DD3FC; box-shadow: 0 0 22px 2px var(--live-glow);
+    animation: ovScan 3s var(--ease-standard) infinite;
+  }
+  @keyframes ovScan { 0% { top: -40%; } 100% { top: 100%; } }
+
+  .ov-reticle {
+    position: absolute; width: 46px; height: 46px; margin: -23px 0 0 -23px;
+    border: 1px solid rgba(56,189,248,0.8); border-radius: 50%;
+    box-shadow: 0 0 12px -2px var(--live-glow); animation: ovPulse 2.2s var(--ease-standard) infinite;
+  }
+  .ov-reticle::before, .ov-reticle::after { content: ''; position: absolute; background: rgba(56,189,248,0.8); }
+  .ov-reticle::before { left: 50%; top: -8px; bottom: -8px; width: 1px; margin-left: -0.5px; }
+  .ov-reticle::after { top: 50%; left: -8px; right: -8px; height: 1px; margin-top: -0.5px; }
+  .ov-reticle-lg { width: 84px; height: 84px; margin: -42px 0 0 -42px; animation: ovTrack 3.4s var(--ease-out) infinite; }
+  @keyframes ovPulse { 0%,100% { opacity: 0.55; transform: scale(0.92); } 50% { opacity: 1; transform: scale(1.04); } }
+
+  .ov-ring {
+    position: absolute; left: 50%; top: 52%; width: 120px; height: 120px; margin: -60px 0 0 -60px;
+    border: 1.5px solid rgba(56,189,248,0.7); border-radius: 50%; animation: ovExpand 2.4s var(--ease-out) infinite;
+  }
+  @keyframes ovExpand { 0% { transform: scale(0.4); opacity: 0.9; } 100% { transform: scale(1.6); opacity: 0; } }
+  .ov-lock {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    font-family: var(--font-mono); font-size: 18px; letter-spacing: 0.22em; color: var(--signal-live);
+    padding: 10px 18px; border: 1.5px solid var(--signal-live); border-radius: var(--radius-sm);
+    background: rgba(56,189,248,0.12); box-shadow: 0 0 24px -6px rgba(56,189,248,0.55);
+    animation: freqLock 700ms var(--ease-spring) both;
+  }
+  @keyframes freqLock { 0% { opacity: 0; transform: translate(-50%,-50%) scale(1.4); } 60% { opacity: 1; transform: translate(-50%,-50%) scale(0.94); } 100% { opacity: 1; transform: translate(-50%,-50%) scale(1); } }
+
+  /* Ballast zones breathing (phase 02) */
+  .ov-zone {
+    position: absolute; border: 1px solid rgba(56,189,248,0.6); border-radius: 3px;
+    background: rgba(56,189,248,0.14); animation: ovBreathe 2.6s var(--ease-standard) infinite;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ov-zone span { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; color: #7DD3FC; }
+  @keyframes ovBreathe { 0%,100% { background: rgba(56,189,248,0.06); } 50% { background: rgba(56,189,248,0.26); } }
+  .ov-flow {
+    position: absolute; height: 2px; background: linear-gradient(90deg, transparent, #7DD3FC, transparent);
+    background-size: 60px 100%; animation: ovFlow 1.4s linear infinite;
+  }
+  @keyframes ovFlow { from { background-position: -60px 0; } to { background-position: 120px 0; } }
+
+  /* Crane targeting (phase 03) */
+  .ov-arc {
+    position: absolute; left: 34%; top: 30%; width: 38%; height: 34%;
+    border-top: 1.5px dashed rgba(56,189,248,0.55); border-right: 1.5px dashed rgba(56,189,248,0.55);
+    border-top-right-radius: 90%; opacity: 0.8;
+  }
+  .ov-track { position: absolute; height: 1.5px; background: rgba(56,189,248,0.35); }
+  .ov-dot {
+    position: absolute; top: -3.5px; left: 0; width: 8px; height: 8px; border-radius: 50%;
+    background: #7DD3FC; box-shadow: 0 0 10px 1px var(--live-glow); animation: ovSlide 3.4s var(--ease-out) infinite;
+  }
+  @keyframes ovSlide { 0% { left: 0; } 60% { left: 100%; } 100% { left: 100%; } }
+  @keyframes ovTrack { 0% { transform: translate(0,0); } 50% { transform: translate(-30px,18px); } 100% { transform: translate(0,0); } }
+
+  /* Cargo load (phase 04) */
+  .ov-droppath { position: absolute; width: 0; border-left: 1px dashed rgba(56,189,248,0.5); }
+  .ov-crate {
+    position: absolute; left: -16px; top: 0; width: 32px; height: 22px;
+    background: rgba(56,189,248,0.22); border: 1.5px solid #7DD3FC; border-radius: 2px;
+    box-shadow: 0 0 14px -2px var(--live-glow); animation: ovDrop 2.6s var(--ease-standard) infinite;
+  }
+  @keyframes ovDrop { 0% { top: -40px; opacity: 0; } 16% { opacity: 1; } 64% { top: 100%; opacity: 1; } 78% { top: 100%; opacity: 0; } 100% { opacity: 0; } }
+  .ov-fill {
+    position: absolute; height: 0; bottom: auto; background: linear-gradient(180deg, rgba(56,189,248,0.5), rgba(56,189,248,0.1));
+    border-top: 1.5px solid #7DD3FC; animation: ovFillUp 2.6s var(--ease-out) infinite;
+  }
+  @keyframes ovFillUp { 0% { height: 0; opacity: 0.4; } 70% { height: 60px; opacity: 0.9; } 100% { height: 60px; opacity: 0.5; } }
+
+  /* Trim level (phase 05) */
+  .ov-level {
+    position: absolute; left: 18%; right: 18%; top: 50%; height: 2px;
+    background: rgba(56,189,248,0.6); transform-origin: center; animation: ovTilt 3s var(--ease-out) infinite;
+  }
+  .ov-bubble {
+    position: absolute; left: 50%; top: -6px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%;
+    background: rgba(56,189,248,0.4); border: 1.5px solid #7DD3FC; box-shadow: 0 0 10px 1px var(--live-glow);
+  }
+  @keyframes ovTilt { 0% { transform: rotate(2.4deg); } 55% { transform: rotate(-0.8deg); } 100% { transform: rotate(0deg); } }
+  .ov-mark { position: absolute; top: 56%; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; color: rgba(125,211,252,0.85); }
+
+  /* Architecture hero — slow scan sweep down the layer stack (image always visible) */
+  .freq-arch-sweep {
+    position: absolute; left: 0; right: 0; height: 38%; top: -38%; pointer-events: none;
+    background: linear-gradient(180deg, transparent, rgba(56,189,248,0.16), transparent);
+    animation: freqArchSweep 5.5s var(--ease-standard) 0.6s infinite;
+  }
+  @keyframes freqArchSweep { 0% { top: -38%; } 60% { top: 100%; } 100% { top: 100%; } }
+
+  /* Contact hero — barely-perceptible float (calm/warm register; image always visible) */
+  .freq-contact-hero img { animation: freqFloat 16s var(--ease-standard) infinite alternate; }
+  @keyframes freqFloat { from { transform: scale(1.04) translateY(0); } to { transform: scale(1.04) translateY(-6px); } }
+
+  /* Investor hero — slow rise (transform-only) + very slow image drift */
+  @keyframes freqRise { from { transform: translateY(20px); } to { transform: none; } }
+  .freq-rise { animation: freqRise 760ms var(--ease-out) both; }
+  .freq-investor-hero img { animation: freqInvDrift 20s var(--ease-standard) infinite alternate; }
+  @keyframes freqInvDrift { from { transform: scale(1.06) translateY(0); } to { transform: scale(1.06) translateY(-10px); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .freq-scene, .ov-photo, .freq-chip, .ov-scanline, .ov-reticle, .ov-reticle-lg, .ov-ring, .ov-lock,
+    .ov-zone, .ov-flow, .ov-dot, .ov-crate, .ov-fill, .ov-level,
+    .freq-arch-sweep, .freq-contact-hero img,
+    .freq-rise, .freq-investor-hero img { animation: none; }
+    .freq-scene, .ov-photo, .freq-chip, .freq-rise { opacity: 1; transform: none; }
+    .freq-contact-hero img { transform: scale(1.04); }
+    .freq-investor-hero img { transform: scale(1.06); }
+  }
+  @media (max-width: 760px) { .freq-emblem { display: none !important; } }
+
+  /* Home hero — investor flagship: live six-phase survey ring + BARGE-402 HUD over a real scene plate. */
+  @media (max-width: 1080px) {
+    .freq-hero-content { grid-template-columns: 1fr !important; gap: 34px !important; padding-top: 108px !important; padding-bottom: 56px !important; }
+    .freq-hero-viz { justify-self: center !important; max-width: 420px !important; order: 2; }
+    .freq-hero-copy { order: 1; }
+    /* The HUD is an overlay only where the ring is wide enough to clear it. Once the hero
+       stacks and the ring is capped at 420px, it moves into flow — no label collisions. */
+    .freq-hud { position: static !important; inset: auto !important; width: 100% !important; max-width: 320px; margin: 18px auto 0 !important; }
+  }
+  @media (max-width: 560px) {
+    .freq-hero-metrics { grid-template-columns: repeat(2, 1fr) !important; gap: 22px 18px !important; }
+    .freq-hero-viz { max-width: 340px !important; }
+    .freq-hud { max-width: 280px; padding: 10px 12px !important; }
+  }
+  #app-loading { color: var(--text-muted); font-family: var(--font-mono); font-size: 13px; padding: 40px; }
+
+  /* ---- A11y: skip link + visible focus ring (WCAG 2.4.11 / 2.4.7) ---- */
+  .freq-skip { position: absolute; left: 16px; top: -60px; z-index: 100; padding: 10px 16px; background: var(--surface-raised); color: var(--text-headline); border: 1px solid var(--indigo); border-radius: var(--radius-md); font-family: var(--font-body); font-size: 14px; transition: top 160ms var(--ease-out); }
+  .freq-skip:focus { top: 16px; }
+  :focus-visible { outline: 2px solid var(--signal-live); outline-offset: 2px; border-radius: 2px; }
+
+  /* ---- Mobile: simulation stage + telemetry stack (≤900px) ---- */
+  @media (max-width: 900px) {
+    .freq-about-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
+    .freq-about-grid > div:first-child { max-width: 360px; }
+    .freq-sim-grid { grid-template-columns: 1fr !important; }
+    .freq-motion-head { display: none !important; }
+    .freq-motion-row { grid-template-columns: 1fr !important; gap: 8px !important; padding: 16px !important; }
+    .freq-motion-row .freq-motion-win { display: none !important; }
+  }
+  /* ---- Simulation Ground (simulation-ground.js) ---- */
+  .freq-annot { pointer-events: none; text-shadow: 0 1px 12px rgba(8,12,24,0.85); }
+  .freq-cap-row:hover, .freq-phase-rail button:hover { border-color: var(--indigo) !important; }
+  @media (max-width: 1000px) {
+    .freq-phase-rail { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+    .freq-stage-grid { grid-template-columns: 1fr !important; }
+    .freq-station-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+    .freq-cap-row { grid-template-columns: minmax(0, 1fr) 116px !important; row-gap: 8px !important; }
+    .freq-cap-row > span:last-child { grid-column: 1 / -1; }
+  }
+  @media (max-width: 620px) {
+    .freq-phase-rail { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    .freq-station-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    .freq-calc-grid { grid-template-columns: 1fr !important; }
+    .freq-annot { display: none; }
+    .freq-path-row { grid-template-columns: 1fr !important; gap: 6px !important; }
+  }
+
+  @media (max-width: 640px) {
+    .freq-sim-intro { flex-direction: column; }
+  }
+
+  /* ---- Image-led sections (home-sections.js) ---- */
+  @media (max-width: 900px) {
+    .freq-hiw-grid { grid-template-columns: 1fr !important; }
+    .freq-ops-grid { grid-template-columns: 1fr !important; gap: 30px !important; }
+    .freq-ops-grid > div:last-child { max-width: 420px; }
+  }
+  @media (max-width: 760px) {
+    .freq-proof-grid { grid-template-columns: 74px 1fr 1fr !important; gap: 8px 10px !important; }
+    .freq-proof-grid .mono { font-size: 10.5px; }
+  }
+  @media (max-width: 560px) {
+    .freq-ops-head, .freq-ops-row { grid-template-columns: 1fr !important; gap: 6px !important; }
+    .freq-ops-head span:last-child { display: none; }
+  }
+</style>
+</head>
+<body>
+  <template id="__bundler_thumbnail">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <rect width="100" height="100" fill="#080C18"/>
+      <text x="50" y="45" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">Frequency</text>
+      <text x="50" y="64" text-anchor="middle" font-family="monospace" font-size="10" letter-spacing="3" fill="#38BDF8">SYSTEMS</text>
+    </svg>
+  </template>
+  <div id="root"><div id="app-loading">Loading Frequency Systems…</div></div>
+  <noscript><div style="padding:40px;color:#CBD5E1;font-family:sans-serif;max-width:640px;margin:0 auto">FREQUENCY Systems — Cargo decisions, grounded in vessel state. A cargo-operations decision system for inland terminals. Contact: frequency.systems@outlook.com</div></noscript>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="_ds_bundle.js"></script>
+  <script src="data.js"></script>
+  <script src="depthstage.js"></script>
+  <script src="home-sections.js"></script>
+  <script src="simulation-ground.js"></script>
+  <script type="module" src="harbor-stage.js"></script>
+
+  <script>window.FREQ_IMG={};window.freqImg=function(r){return "assets/"+String(r).replace(/^.*\//,"");};</script>
+  <script src="app.prod.js"></script>
+</body>
+</html>

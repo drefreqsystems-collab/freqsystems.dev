@@ -1,0 +1,34 @@
+# FREQUENCY Systems
+
+> A maritime operational intelligence company building the autonomous cargo execution layer for U.S. inland waterways.
+
+FREQUENCY Systems is building a cargo-operations decision system for inland terminals. Initial focus is one terminal and one cargo-transfer workflow. The company is pre-pilot: no field performance, accuracy figure, crew reduction, timing comparison or terminal relationship is claimed.
+
+## Status
+- Stage: pre-pilot, proposed product behaviour
+- Initial scope: one terminal, one cargo-transfer workflow
+- Validation: a controlled six-phase simulation running configured scenario values, labelled illustrative
+- Next demonstrable milestone: one cargo transfer run end to end against a terminal's real operating constraints
+
+## The workflow
+Observations -> operations record -> planning and resource allocation -> checks and operator approval -> execution interface -> outcome record.
+
+An operator approves; the system proposes. Stale observations are shown as stale and not used until refreshed. Missing observations are reported, not interpolated. Conflicts and failed checks are raised for operator review.
+
+## Vessel configuration (as supplied, illustrative scenario)
+- BARGE-402, 45m x 10m
+- Draft read at six fixed hull positions: FP, FS, MP, MS, AP, AS
+- Mean draft, trim and list are calculated from those readings, not read directly
+
+## Pages
+- Home: what the product is, the proposed workflow, three steps, founder
+- Simulation: six-phase cargo-transfer walkthrough, paused by default, operator-driven
+- Architecture: the six layers and where the system stops
+- Investor: problem, scope, workflow, validation status, next milestone, contact
+- Contact: frequency.systems@outlook.com
+
+## Imagery
+All renders on the site are illustrative and labelled as such. None is a field capture.
+
+## Contact
+frequency.systems@outlook.com

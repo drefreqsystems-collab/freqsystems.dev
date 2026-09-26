@@ -1,0 +1,31 @@
+/* Frequency Systems — EFFECTS: SHADOWS, GLOWS, MOTION
+   On near-black surfaces, depth comes from indigo borders + faint inner
+   light, not soft drop-shadows. Glow is reserved for live-data elements. */
+
+:root {
+  /* ---- Elevation (subtle on dark; mostly border + inner sheen) ---- */
+  --shadow-panel:   0 1px 0 rgba(255,255,255,0.02) inset,
+                    0 12px 32px -16px rgba(0,0,0,0.7);
+  --shadow-raised:  0 1px 0 rgba(255,255,255,0.03) inset,
+                    0 20px 48px -20px rgba(0,0,0,0.8);
+  --shadow-hull:    0 24px 40px -18px rgba(0,0,0,0.85);  /* barge soft contact shadow */
+
+  /* ---- Glows (LIVE DATA ONLY — never decorative) ---- */
+  --glow-live:      0 0 0 1px var(--live-glow), 0 0 18px -2px var(--live-glow);
+  --glow-live-dot:  0 0 8px 0 var(--live-glow);
+  --glow-active:    0 0 8px 0 rgba(56,189,248,0.5);
+
+  /* ---- Focus ring ---- */
+  --ring-focus:     0 0 0 2px var(--dm-bg), 0 0 0 4px var(--indigo);
+
+  /* ---- Motion (Simulation page only) ---- */
+  --ease-standard:  cubic-bezier(0.4, 0.0, 0.2, 1); /* @kind other */
+  --ease-out:       cubic-bezier(0.16, 1, 0.3, 1); /* @kind other */
+  --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1); /* @kind other */
+  --dur-fast:       120ms; /* @kind other */
+  --dur-base:       240ms; /* @kind other */
+  --dur-slow:       520ms; /* @kind other */
+
+  /* ---- Backdrop ---- */
+  --blur-panel:     blur(8px); /* @kind other */
+}
