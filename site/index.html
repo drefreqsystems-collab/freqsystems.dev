@@ -210,6 +210,15 @@
     .freq-investor-hero img { transform: scale(1.06); }
   }
   @media (max-width: 760px) { .freq-emblem { display: none !important; } }
+  /* Architecture header mark: the orbital core fades into the page instead of sitting in a hard-edged,
+     double-outlined badge whose square night-sky background never matched the page. */
+  .freq-emblem > div:first-child {
+    border: 0 !important; box-shadow: none !important;
+    background-size: 124% !important; background-position: 47% 46% !important;
+    -webkit-mask-image: radial-gradient(circle closest-side, #000 62%, rgba(0,0,0,0.55) 80%, transparent 100%);
+    mask-image: radial-gradient(circle closest-side, #000 62%, rgba(0,0,0,0.55) 80%, transparent 100%);
+  }
+  .freq-emblem > div[aria-hidden] { display: none; }
 
   /* ---- Home hero: the live 3D cargo transfer (home-hero.js + harbor-motion.js) ---- */
   .freq-mh { position: relative; display: flex; flex-direction: column; min-height: calc(100svh - 65px); max-height: 1040px; overflow: hidden; background: #05080F; border-bottom: 1px solid var(--border-faint); }

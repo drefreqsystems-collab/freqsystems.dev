@@ -908,7 +908,9 @@ class HarborStage extends HTMLElement {
     this._raf = requestAnimationFrame(() => this.loop());
     const dt = Math.min(0.05, this.clock.getDelta());
     if (this.onScreen === false) return;
-    this.age += dt;
+    // Idle motion (hull bob and roll, lattice pulse, water flow) runs on this clock, so it only
+    // advances while the scene is playing: a paused scene is a still frame.
+    if (this.playing && !this.reduced) this.age += dt;
 
     if (this.playing && !this.reduced && this.tPhase < 1) {
       this.tPhase = clamp(this.tPhase + (dt * this.speed) / DUR[this.phase], 0, 1);

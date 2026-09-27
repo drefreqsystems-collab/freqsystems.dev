@@ -114,7 +114,7 @@ window.FREQ_STATIONS = {
 };
 
 /* ---- The stage: one static photoreal plate per phase, with quiet HTML annotations. ---- */
-function PhaseStage({ phase, index, inspect }) {
+function PhaseStage({ phase, index, inspect, advancing }) {
   const hostRef = React.useRef(null);
   const elRef = React.useRef(null);
   const [playing, setPlaying] = React.useState(false);
@@ -159,6 +159,9 @@ function PhaseStage({ phase, index, inspect }) {
     }, text);
   };
 
+  // Neither this scene nor the walkthrough is running: the stage reads as inactive, not live.
+  const inactive = !playing && !advancing;
+
   const ctl = function (label, onClick, disabled) {
     return /*#__PURE__*/React.createElement('button', {
       key: label, type: 'button', onClick: onClick, disabled: !!disabled,
@@ -187,13 +190,16 @@ function PhaseStage({ phase, index, inspect }) {
         playing: playing && !reduced ? '1' : '0',
         reduced: reduced ? '1' : '0',
         exagg: '5',
-        style: { position: 'absolute', inset: 0, display: 'block', width: '100%', height: '100%' }
+        style: {
+          position: 'absolute', inset: 0, display: 'block', width: '100%', height: '100%',
+          filter: inactive ? 'saturate(0.45) brightness(0.8)' : 'none', transition: 'filter 300ms var(--ease-out)'
+        }
       }),
       /*#__PURE__*/React.createElement('div', {
         style: { position: 'absolute', top: 12, left: 14, display: 'flex', gap: 6, flexWrap: 'wrap', maxWidth: '68%', pointerEvents: 'none' }
       },
         chip('Illustrative 3D operational model'),
-        chip('Attitude \u00d75 for legibility', 'warn')
+        chip('Attitude ×5 for legibility', 'warn')
       ),
       /*#__PURE__*/React.createElement('span', {
         className: 'mono',
@@ -202,21 +208,21 @@ function PhaseStage({ phase, index, inspect }) {
           color: 'var(--text-muted)', padding: '4px 9px', borderRadius: 'var(--radius-sm)',
           border: '1px solid var(--border-default)', background: 'rgba(8,12,24,0.62)'
         }
-      }, 'PHASE ' + String(index + 1).padStart(2, '0') + ' / 06'),
+      }, 'PHASE ' + String(index + 1).padStart(2, '0') + ' / 06' + (inactive ? ' · INACTIVE' : '')),
       /*#__PURE__*/React.createElement('span', {
         className: 'mono',
         style: {
           position: 'absolute', bottom: 12, left: 14, fontSize: 10.5, letterSpacing: '0.12em',
           color: 'var(--text-faint)', textTransform: 'uppercase'
         }
-      }, 'Illustrative 3D operational model \u00b7 not a field capture'),
+      }, 'Illustrative 3D operational model · not a field capture'),
       /*#__PURE__*/React.createElement('span', {
         className: 'mono',
         style: {
           position: 'absolute', bottom: 12, right: 14, fontSize: 10.5, letterSpacing: '0.1em',
           color: 'var(--text-faint)'
         }
-      }, 'drag \u00b7 scroll \u00b7 click a station')
+      }, 'drag · scroll · click a station')
     ),
     /*#__PURE__*/React.createElement('div', {
       style: {
@@ -229,9 +235,9 @@ function PhaseStage({ phase, index, inspect }) {
         className: 'mono',
         style: { fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--text-faint)', marginRight: 2 }
       }, 'Scene'),
-      ctl(reduced ? 'Motion reduced' : playing ? '\u275a\u275a Hold' : t > 0 ? '\u25b6 Resume' : '\u25b6 Run motion',
+      ctl(reduced ? 'Motion reduced' : playing ? '❚❚ Hold' : t > 0 ? '▶ Resume' : '▶ Run motion',
           function () { if (!reduced) setPlaying(function (p) { return !p; }); }, reduced),
-      ctl('\u21ba Replay', function () { setPlaying(false); setT(0); call('replayPhase'); }),
+      ctl('↺ Replay', function () { setPlaying(false); setT(0); call('replayPhase'); }),
       ctl('Reset view', function () { call('resetView'); }),
       /*#__PURE__*/React.createElement('span', {
         style: {
@@ -249,7 +255,7 @@ function PhaseStage({ phase, index, inspect }) {
       /*#__PURE__*/React.createElement('span', {
         className: 'mono',
         style: { fontSize: 10.5, letterSpacing: '0.14em', color: 'var(--text-faint)', textTransform: 'uppercase' }
-      }, reduced ? 'Static settled pose' : playing ? 'Running' : t >= 1 ? 'Phase complete \u00b7 held' : t > 0 ? 'Paused \u00b7 pose held' : 'Paused at phase start')
+      }, reduced ? 'Static settled pose' : playing ? 'Running' : t >= 1 ? 'Phase complete · held' : t > 0 ? 'Paused · pose held' : 'Paused at phase start')
     )
   );
 }
@@ -333,7 +339,9 @@ window.SpringPress = SpringPress;
 function KineticTitle({ text, index }) {
   const [bump, setBump] = React.useState(0);
   const w = useSpring(bump ? 640 : 520, 150);
+  const first = React.useRef(true);
   React.useEffect(() => {
+    if (first.current) { first.current = false; return; }   // not on first render: nothing has been triggered yet
     setBump(1);
     const t = setTimeout(() => setBump(0), 220);
     return () => clearTimeout(t);
@@ -419,7 +427,7 @@ function SimulationGround() {
       }, 'A controlled walkthrough of one cargo transfer.'),
       /*#__PURE__*/React.createElement('p', {
         style: { fontSize: 17.5, lineHeight: 1.65, color: 'var(--text-body)', maxWidth: 720, marginTop: 18 }
-      }, 'This is the validation environment for the product \u2014 six operational phases of a single cargo transfer, each with its objective, inputs, the decision an operator makes, and the record it produces. It runs on configured scenario values, not field measurements, and it advances only when you advance it.'),
+      }, 'This is the validation environment for the product — six operational phases of a single cargo transfer, each with its objective, inputs, the decision an operator makes, and the record it produces. It runs on configured scenario values, not field measurements, and it advances only when you advance it.'),
       /*#__PURE__*/React.createElement('div', { style: { marginTop: 24 } },
         /*#__PURE__*/React.createElement(DataStatus, { stamp: stamp })
       )
@@ -440,14 +448,15 @@ function SimulationGround() {
         style: {
           display: 'flex', flexDirection: 'column', gap: 5, textAlign: 'left',
           padding: '12px 13px', cursor: 'pointer',
-          background: n === i ? 'rgba(56,189,248,0.08)' : 'var(--surface-card)',
-          border: '1px solid ' + (n === i ? 'var(--signal-live)' : 'var(--border-default)'),
+          // live blue only while the walkthrough is advancing; a paused selection is indigo
+          background: n === i ? (playing ? 'rgba(56,189,248,0.08)' : 'rgba(99,102,241,0.10)') : 'var(--surface-card)',
+          border: '1px solid ' + (n === i ? (playing ? 'var(--signal-live)' : 'var(--indigo)') : 'var(--border-default)'),
           borderRadius: 'var(--radius-sm)',
           transition: 'border-color 180ms var(--ease-out), background 180ms var(--ease-out)'
         }
       },
         /*#__PURE__*/React.createElement('span', {
-          className: 'mono', style: { fontSize: 11, letterSpacing: '0.1em', color: n === i ? 'var(--signal-live)' : 'var(--text-faint)' }
+          className: 'mono', style: { fontSize: 11, letterSpacing: '0.1em', color: n === i ? (playing ? 'var(--signal-live)' : 'var(--indigo-300)') : 'var(--text-faint)' }
         }, String(n + 1).padStart(2, '0')),
         /*#__PURE__*/React.createElement('span', {
           style: { fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 600, color: n === i ? 'var(--text-headline)' : 'var(--text-body)', lineHeight: 1.2 }
@@ -458,16 +467,28 @@ function SimulationGround() {
       /*#__PURE__*/React.createElement('div', {
         style: { display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginTop: 14 }
       },
-        /*#__PURE__*/React.createElement(SpringPress, { onClick: () => select(i - 1), style: ctl, label: 'Previous phase' }, '\u2190 Previous'),
-        /*#__PURE__*/React.createElement(SpringPress, { onClick: () => select(i + 1), style: ctl, label: 'Next phase' }, 'Next \u2192'),
+        /*#__PURE__*/React.createElement(SpringPress, { onClick: () => select(i - 1), style: ctl, label: 'Previous phase' }, '← Previous'),
+        /*#__PURE__*/React.createElement(SpringPress, { onClick: () => select(i + 1), style: ctl, label: 'Next phase' }, 'Next →'),
         /*#__PURE__*/React.createElement(SpringPress, { onClick: () => { setPlaying(false); setI(0); }, style: ctl, label: 'Reset to first phase' }, 'Reset'),
         /*#__PURE__*/React.createElement(SpringPress, {
           onClick: () => setPlaying(p => !p), pressed: playing,
           style: { ...ctl, borderColor: playing ? 'var(--signal-live)' : 'var(--border-default)', color: playing ? 'var(--signal-live)' : 'var(--text-body)' }
         }, playing ? 'Pause' : 'Play'),
         /*#__PURE__*/React.createElement('span', {
-          className: 'mono', style: { fontSize: 11.5, letterSpacing: '0.08em', color: 'var(--text-faint)', marginLeft: 4 }
-        }, playing ? 'ADVANCING' : 'PAUSED')
+          className: 'mono', role: 'status',
+          style: {
+            display: 'inline-flex', alignItems: 'center', gap: 8, marginLeft: 4, padding: '6px 11px',
+            fontSize: 11.5, letterSpacing: '0.1em', borderRadius: 'var(--radius-sm)',
+            color: playing ? 'var(--signal-live)' : 'var(--text-muted)',
+            border: '1px solid ' + (playing ? 'var(--signal-live)' : 'var(--border-default)'),
+            background: playing ? 'rgba(56,189,248,0.08)' : 'transparent'
+          }
+        },
+          /*#__PURE__*/React.createElement('span', {
+            'aria-hidden': true,
+            style: { width: 7, height: 7, borderRadius: 999, boxSizing: 'border-box', border: '1.5px solid currentColor', background: playing ? 'currentColor' : 'transparent' }
+          }),
+          playing ? 'ADVANCING · ONE PHASE EVERY 5 S' : 'INACTIVE · PAUSED — PRESS PLAY TO ADVANCE')
       ),
 
       /* stage + phase detail */
@@ -476,7 +497,7 @@ function SimulationGround() {
         className: 'freq-stage-grid',
         style: { display: 'grid', gridTemplateColumns: 'minmax(0, 1.35fr) minmax(0, 1fr)', gap: 24, marginTop: 20, alignItems: 'start' }
       },
-        /*#__PURE__*/React.createElement(PhaseStage, { phase: phase, index: i, inspect: inspect }),
+        /*#__PURE__*/React.createElement(PhaseStage, { phase: phase, index: i, inspect: inspect, advancing: playing }),
         /*#__PURE__*/React.createElement('div', {
           style: { display: 'flex', flexDirection: 'column', gap: 0, border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', overflow: 'hidden' }
         },
@@ -487,7 +508,7 @@ function SimulationGround() {
             phase.conditional && /*#__PURE__*/React.createElement('span', {
               className: 'mono',
               style: { display: 'inline-block', marginTop: 9, fontSize: 10.5, letterSpacing: '0.1em', color: 'var(--text-muted)', padding: '4px 8px', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-sm)' }
-            }, 'CONDITIONAL \u00b7 PERFORMED WHEN THE PLAN REQUIRES IT')
+            }, 'CONDITIONAL · PERFORMED WHEN THE PLAN REQUIRES IT')
           ),
           detail.map(([k, v]) => /*#__PURE__*/React.createElement('div', {
             key: k,
@@ -511,10 +532,10 @@ function SimulationGround() {
       /*#__PURE__*/React.createElement(Eyebrow, null, 'Measurement Positions'),
       /*#__PURE__*/React.createElement('h2', {
         style: { fontSize: 'clamp(24px, 3vw, 32px)', lineHeight: 1.15, maxWidth: 640, marginTop: 14 }
-      }, 'Six positions on the hull \u2014 not the same thing as the six phases.'),
+      }, 'Six positions on the hull — not the same thing as the six phases.'),
       /*#__PURE__*/React.createElement('p', {
         style: { fontSize: 16.5, lineHeight: 1.65, color: 'var(--text-body)', maxWidth: 680, marginTop: 14 }
-      }, 'Draft is read at six fixed positions on the hull. Those readings are measured inputs. Mean draft, trim and list are calculated from them \u2014 they are not read anywhere.'),
+      }, 'Draft is read at six fixed positions on the hull. Those readings are measured inputs. Mean draft, trim and list are calculated from them — they are not read anywhere.'),
       /*#__PURE__*/React.createElement('div', {
         className: 'freq-station-grid',
         style: { display: 'grid', gridTemplateColumns: 'repeat(6, minmax(0, 1fr))', gap: 8, marginTop: 22 }
@@ -524,7 +545,7 @@ function SimulationGround() {
       },
         /*#__PURE__*/React.createElement('span', { className: 'mono', style: { fontSize: 11, letterSpacing: '0.12em', color: 'var(--signal-live)' } }, k),
         r[k] === null
-          ? /*#__PURE__*/React.createElement('span', { className: 'mono', style: { fontSize: 15, color: 'var(--status-pending)' } }, '\u2014 missing')
+          ? /*#__PURE__*/React.createElement('span', { className: 'mono', style: { fontSize: 15, color: 'var(--status-pending)' } }, '— missing')
           : /*#__PURE__*/React.createElement('span', { className: 'mono', style: { fontSize: 17, color: 'var(--text-headline)' } }, r[k].toFixed(2), /*#__PURE__*/React.createElement('span', { style: { fontSize: 11, color: 'var(--text-muted)' } }, ' ft')),
         /*#__PURE__*/React.createElement('span', { style: { fontSize: 11.5, color: 'var(--text-muted)', lineHeight: 1.35 } }, ST.labels[k])
       ))),
@@ -533,8 +554,8 @@ function SimulationGround() {
         style: { display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8, marginTop: 8 }
       }, [
         ['Mean draft', mean.toFixed(2) + ' ft', 'Calculated from ' + basis],
-        ['Trim (aft \u2212 fwd)', (trim >= 0 ? '+' : '') + trim.toFixed(2) + ' ft', 'Calculated from the fore and aft pairs'],
-        ['List (stbd \u2212 port)', (list >= 0 ? '+' : '') + list.toFixed(2) + ' ft', 'Calculated from ' + basis]
+        ['Trim (aft − fwd)', (trim >= 0 ? '+' : '') + trim.toFixed(2) + ' ft', 'Calculated from the fore and aft pairs'],
+        ['List (stbd − port)', (list >= 0 ? '+' : '') + list.toFixed(2) + ' ft', 'Calculated from ' + basis]
       ].map(([k, v, n]) => /*#__PURE__*/React.createElement('div', {
         key: k,
         style: { padding: '13px 14px', background: 'rgba(8,12,24,0.62)', border: '1px dashed var(--border-default)', borderRadius: 'var(--radius-sm)', display: 'flex', flexDirection: 'column', gap: 4 }
@@ -553,7 +574,7 @@ function SimulationGround() {
         }, gap ? 'Restore full set' : 'Preview missing data'),
         /*#__PURE__*/React.createElement('span', {
           className: 'mono', style: { fontSize: 11.5, letterSpacing: '0.06em', color: 'var(--text-muted)' }
-        }, gap ? 'MP WITHHELD \u00b7 REPORTED MISSING, NOT INTERPOLATED' : 'ALL SIX POSITIONS PRESENT')
+        }, gap ? 'MP WITHHELD · REPORTED MISSING, NOT INTERPOLATED' : 'ALL SIX POSITIONS PRESENT')
       ),
       /*#__PURE__*/React.createElement('div', {
         style: { marginTop: 20, border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', background: 'var(--surface-card)', padding: '18px 18px 12px' }
@@ -563,10 +584,10 @@ function SimulationGround() {
         },
           /*#__PURE__*/React.createElement('span', {
             className: 'mono', style: { fontSize: 11, letterSpacing: '0.14em', color: 'var(--text-faint)', textTransform: 'uppercase' }
-          }, 'Mean draft by phase \u00b7 ft'),
+          }, 'Mean draft by phase · ft'),
           /*#__PURE__*/React.createElement('span', {
             className: 'mono', style: { fontSize: 11, letterSpacing: '0.08em', color: 'var(--text-muted)' }
-          }, 'ILLUSTRATIVE \u00b7 CONFIGURED SCENARIO \u00b7 ' + stamp)
+          }, 'ILLUSTRATIVE · CONFIGURED SCENARIO · ' + stamp)
         ),
         /*#__PURE__*/React.createElement('svg', {
           viewBox: '0 0 600 150', role: 'img',
@@ -612,7 +633,7 @@ function SimulationGround() {
       /*#__PURE__*/React.createElement('p', {
         className: 'mono',
         style: { fontSize: 11.5, letterSpacing: '0.05em', color: 'var(--text-faint)', marginTop: 14 }
-      }, 'Vessel configuration held as supplied: ' + window.FREQ.BARGE.id + ' \u00b7 ' + window.FREQ.BARGE.length + ' \u00d7 ' + window.FREQ.BARGE.beam + '. Scenario values are illustrative.')
+      }, 'Vessel configuration held as supplied: ' + window.FREQ.BARGE.id + ' · ' + window.FREQ.BARGE.length + ' × ' + window.FREQ.BARGE.beam + '. Scenario values are illustrative.')
     ),
 
     /*#__PURE__*/React.createElement(window.CapabilityInventory, null)
@@ -626,9 +647,9 @@ function CapabilityInventory() {
   const rows = [
     { t: 'State-driven interaction', s: 'in', d: 'One phase index drives the scene, the annotations, the phase record and the readings. Phase tabs, previous/next/reset and play/pause are the only inputs that change it; default is paused and a manual selection always pauses, so there is no autonomous restart.' },
     { t: 'Physics-based micro-interactions', s: 'in', d: 'Controls run on a critically damped spring integrator (damping ratio 1.0, mass 1): the press response reaches its target and stops, with no overshoot and therefore no bounce. The loop halts on settle rather than running continuously, and is a no-op under reduced motion.' },
-    { t: 'Multi-axis parallax inspection', s: 'in', d: 'Two bounded axes inside the simulation viewer only: pointer position, and the viewer\u2019s own position in the viewport as you scroll. Both are clamped to a few per cent of frame, never move page scroll or reading position, and are disabled under reduced motion and below 900px. This is a 2.5D depth warp of a photographic plate, not a 3D asset.' },
+    { t: 'Multi-axis parallax inspection', s: 'in', d: 'Two bounded axes inside the simulation viewer only: pointer position, and the viewer’s own position in the viewport as you scroll. Both are clamped to a few per cent of frame, never move page scroll or reading position, and are disabled under reduced motion and below 900px. This is a 2.5D depth warp of a photographic plate, not a 3D asset.' },
     { t: 'Telemetry mapping', s: 'in', d: 'Readings drive the station cards, the calculated figures and the mean-draft chart, all carrying mode (illustrative), source (configured scenario), units and scenario timestamp. Missing-observation handling is implemented and can be previewed: a withheld position is reported missing rather than interpolated, and the calculated figures recompute from the reduced set and say so. No value is animated to look live.' },
-    { t: 'Kinetic typography', s: 'in', d: 'A user-triggered response on the variable weight axis of Space Grotesk (wght 300\u2013700), fired when the operator changes phase and settled on the same spring. Layout is stable by construction: the block reserves its height, the line does not re-wrap, and font synthesis is off. Nothing stretches or animates on its own.' },
+    { t: 'Kinetic typography', s: 'in', d: 'A user-triggered response on the variable weight axis of Space Grotesk (wght 300–700), fired when the operator changes phase and settled on the same spring. Layout is stable by construction: the block reserves its height, the line does not re-wrap, and font synthesis is off. Nothing stretches or animates on its own.' },
     { t: 'Ambient occlusion', s: 'part', d: 'Not implemented. The plates carry only the lighting baked into the supplied renders. No CSS shadow is presented as AO; real AO needs a rendered 3D scene (for example three.js GTAOPass) or baked AO maps shipped with a model.' },
     { t: 'Geospatial digital twin', s: 'out', d: 'Needs a georeferenced terminal model with real coordinates, asset provenance and attribution. Not supplied. The harbour plates are illustrative and labelled illustrative.' },
     { t: 'Gaussian splatting', s: 'out', d: 'Needs an actual splat dataset and a supporting renderer with level-of-detail handling. Not supplied. A warped image is not a splat and is not described as one here.' },
