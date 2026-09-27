@@ -1,6 +1,7 @@
 /* Frequency Systems — Simulation Ground.
- * A paused-by-default, operator-driven walkthrough of the six-phase cargo-transfer
- * workflow. No autonomous motion: the scene changes only when the operator changes it.
+ * An inactive, operator-stepped walkthrough of the six-phase cargo-transfer workflow.
+ * Nothing runs or advances on its own: the operator steps through the phases, and the
+ * 3D model shows each one as a still frame.
  *
  * Registered as window.SimulationGround and consumed by app.prod.js as the Simulation page.
  *
@@ -113,37 +114,13 @@ window.FREQ_STATIONS = {
   ]
 };
 
-/* ---- The stage: one static photoreal plate per phase, with quiet HTML annotations. ---- */
-function PhaseStage({ phase, index, inspect, advancing }) {
+/* ---- The stage: the illustrative 3D model of the selected phase, as a still frame. ---- */
+function PhaseStage({ phase, index, inspect }) {
   const hostRef = React.useRef(null);
-  const elRef = React.useRef(null);
-  const [playing, setPlaying] = React.useState(false);
-  const [t, setT] = React.useState(0);
-  const reduced = React.useMemo(function () {
-    return typeof window.matchMedia === 'function' &&
-           window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  }, []);
 
-  React.useEffect(function () {
+  const resetView = function () {
     const el = hostRef.current && hostRef.current.querySelector('harbor-stage');
-    if (!el) return;
-    elRef.current = el;
-    function onProgress(e) { setT(e.detail.t); }
-    function onComplete() { setPlaying(false); }
-    el.addEventListener('phaseprogress', onProgress);
-    el.addEventListener('phasecomplete', onComplete);
-    return function () {
-      el.removeEventListener('phaseprogress', onProgress);
-      el.removeEventListener('phasecomplete', onComplete);
-    };
-  }, []);
-
-  // Phase change is replay navigation, not a completed transfer: reset local transport state.
-  React.useEffect(function () { setPlaying(false); setT(0); }, [index]);
-
-  const call = function (name) {
-    const el = elRef.current;
-    if (el && typeof el[name] === 'function') el[name]();
+    if (el && typeof el.resetView === 'function') el.resetView();
   };
 
   const chip = function (text, tone) {
@@ -159,23 +136,6 @@ function PhaseStage({ phase, index, inspect, advancing }) {
     }, text);
   };
 
-  // Neither this scene nor the walkthrough is running: the stage reads as inactive, not live.
-  const inactive = !playing && !advancing;
-
-  const ctl = function (label, onClick, disabled) {
-    return /*#__PURE__*/React.createElement('button', {
-      key: label, type: 'button', onClick: onClick, disabled: !!disabled,
-      style: {
-        padding: '8px 13px', borderRadius: 'var(--radius-sm)',
-        border: '1px solid var(--border-faint)', background: 'var(--dm-bg)',
-        color: disabled ? 'var(--text-faint)' : 'var(--text-strong)',
-        cursor: disabled ? 'default' : 'pointer', fontFamily: 'var(--font-mono)',
-        fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase',
-        transition: 'border-color var(--dur-fast) var(--ease-standard)'
-      }
-    }, label);
-  };
-
   return /*#__PURE__*/React.createElement('div', null,
     /*#__PURE__*/React.createElement('div', {
       ref: hostRef,
@@ -185,14 +145,17 @@ function PhaseStage({ phase, index, inspect, advancing }) {
         aspectRatio: '3 / 2', boxShadow: 'var(--shadow-raised)'
       }
     },
+      // The walkthrough is inactive, so the model never runs here: playing is always off and
+      // reduced="1" shows each phase as its settled end state with no idle motion. Dimmed so it
+      // reads as inactive, not live.
       /*#__PURE__*/React.createElement('harbor-stage', {
         phase: String(index),
-        playing: playing && !reduced ? '1' : '0',
-        reduced: reduced ? '1' : '0',
+        playing: '0',
+        reduced: '1',
         exagg: '5',
         style: {
           position: 'absolute', inset: 0, display: 'block', width: '100%', height: '100%',
-          filter: inactive ? 'saturate(0.45) brightness(0.8)' : 'none', transition: 'filter 300ms var(--ease-out)'
+          filter: 'saturate(0.45) brightness(0.8)'
         }
       }),
       /*#__PURE__*/React.createElement('div', {
@@ -208,14 +171,14 @@ function PhaseStage({ phase, index, inspect, advancing }) {
           color: 'var(--text-muted)', padding: '4px 9px', borderRadius: 'var(--radius-sm)',
           border: '1px solid var(--border-default)', background: 'rgba(8,12,24,0.62)'
         }
-      }, 'PHASE ' + String(index + 1).padStart(2, '0') + ' / 06' + (inactive ? ' · INACTIVE' : '')),
+      }, 'PHASE ' + String(index + 1).padStart(2, '0') + ' / 06 · INACTIVE'),
       /*#__PURE__*/React.createElement('span', {
         className: 'mono',
         style: {
           position: 'absolute', bottom: 12, left: 14, fontSize: 10.5, letterSpacing: '0.12em',
           color: 'var(--text-faint)', textTransform: 'uppercase'
         }
-      }, 'Illustrative 3D operational model · not a field capture'),
+      }, 'Not a field capture'),
       /*#__PURE__*/React.createElement('span', {
         className: 'mono',
         style: {
@@ -235,27 +198,19 @@ function PhaseStage({ phase, index, inspect, advancing }) {
         className: 'mono',
         style: { fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--text-faint)', marginRight: 2 }
       }, 'Scene'),
-      ctl(reduced ? 'Motion reduced' : playing ? '❚❚ Hold' : t > 0 ? '▶ Resume' : '▶ Run motion',
-          function () { if (!reduced) setPlaying(function (p) { return !p; }); }, reduced),
-      ctl('↺ Replay', function () { setPlaying(false); setT(0); call('replayPhase'); }),
-      ctl('Reset view', function () { call('resetView'); }),
-      /*#__PURE__*/React.createElement('span', {
+      /*#__PURE__*/React.createElement('button', {
+        type: 'button', onClick: resetView,
         style: {
-          flex: '1 1 120px', minWidth: 90, height: 4, borderRadius: 2,
-          background: 'var(--indigo-line-2)', overflow: 'hidden'
+          padding: '8px 13px', borderRadius: 'var(--radius-sm)',
+          border: '1px solid var(--border-faint)', background: 'var(--dm-bg)',
+          color: 'var(--text-strong)', cursor: 'pointer', fontFamily: 'var(--font-mono)',
+          fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase'
         }
-      },
-        /*#__PURE__*/React.createElement('span', {
-          style: {
-            display: 'block', height: '100%', width: (t * 100).toFixed(1) + '%',
-            background: 'var(--signal-live)', transition: 'width 120ms linear'
-          }
-        })
-      ),
+      }, 'Reset view'),
       /*#__PURE__*/React.createElement('span', {
         className: 'mono',
-        style: { fontSize: 10.5, letterSpacing: '0.14em', color: 'var(--text-faint)', textTransform: 'uppercase' }
-      }, reduced ? 'Static settled pose' : playing ? 'Running' : t >= 1 ? 'Phase complete · held' : t > 0 ? 'Paused · pose held' : 'Paused at phase start')
+        style: { marginLeft: 'auto', fontSize: 10.5, letterSpacing: '0.14em', color: 'var(--text-faint)', textTransform: 'uppercase' }
+      }, 'Inactive · still frame of the settled phase')
     )
   );
 }
@@ -365,7 +320,6 @@ function SimulationGround() {
   const PHASES = window.FREQ_PHASE_DETAIL;
   const ST = window.FREQ_STATIONS;
   const [i, setI] = React.useState(0);
-  const [playing, setPlaying] = React.useState(false);   // default paused
   const [inspect, setInspect] = React.useState(false);
   const [gap, setGap] = React.useState(false);          // preview missing-observation handling
   const stamp = React.useRef(new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC').current;
@@ -376,14 +330,8 @@ function SimulationGround() {
     setInspect(!narrow && !reduced);
   }, []);
 
-  // Advance only while explicitly playing. Any manual selection pauses (no auto-resume).
-  React.useEffect(() => {
-    if (!playing) return;
-    const t = setTimeout(() => setI(p => (p + 1) % PHASES.length), 5200);
-    return () => clearTimeout(t);
-  }, [playing, i]);
-
-  const select = n => { setPlaying(false); setI((n + PHASES.length) % PHASES.length); };
+  // Inactive walkthrough: the phase changes only when the operator steps it. There is no play mode.
+  const select = n => setI((n + PHASES.length) % PHASES.length);
   const phase = PHASES[i];
   // One position is withheld while the missing-data preview is on, so the handling is
   // visible: the value is reported missing, never interpolated, and the calculated figures
@@ -448,15 +396,15 @@ function SimulationGround() {
         style: {
           display: 'flex', flexDirection: 'column', gap: 5, textAlign: 'left',
           padding: '12px 13px', cursor: 'pointer',
-          // live blue only while the walkthrough is advancing; a paused selection is indigo
-          background: n === i ? (playing ? 'rgba(56,189,248,0.08)' : 'rgba(99,102,241,0.10)') : 'var(--surface-card)',
-          border: '1px solid ' + (n === i ? (playing ? 'var(--signal-live)' : 'var(--indigo)') : 'var(--border-default)'),
+          // indigo, never live blue: the walkthrough is inactive
+          background: n === i ? 'rgba(99,102,241,0.10)' : 'var(--surface-card)',
+          border: '1px solid ' + (n === i ? 'var(--indigo)' : 'var(--border-default)'),
           borderRadius: 'var(--radius-sm)',
           transition: 'border-color 180ms var(--ease-out), background 180ms var(--ease-out)'
         }
       },
         /*#__PURE__*/React.createElement('span', {
-          className: 'mono', style: { fontSize: 11, letterSpacing: '0.1em', color: n === i ? (playing ? 'var(--signal-live)' : 'var(--indigo-300)') : 'var(--text-faint)' }
+          className: 'mono', style: { fontSize: 11, letterSpacing: '0.1em', color: n === i ? 'var(--indigo-300)' : 'var(--text-faint)' }
         }, String(n + 1).padStart(2, '0')),
         /*#__PURE__*/React.createElement('span', {
           style: { fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 600, color: n === i ? 'var(--text-headline)' : 'var(--text-body)', lineHeight: 1.2 }
@@ -469,26 +417,20 @@ function SimulationGround() {
       },
         /*#__PURE__*/React.createElement(SpringPress, { onClick: () => select(i - 1), style: ctl, label: 'Previous phase' }, '← Previous'),
         /*#__PURE__*/React.createElement(SpringPress, { onClick: () => select(i + 1), style: ctl, label: 'Next phase' }, 'Next →'),
-        /*#__PURE__*/React.createElement(SpringPress, { onClick: () => { setPlaying(false); setI(0); }, style: ctl, label: 'Reset to first phase' }, 'Reset'),
-        /*#__PURE__*/React.createElement(SpringPress, {
-          onClick: () => setPlaying(p => !p), pressed: playing,
-          style: { ...ctl, borderColor: playing ? 'var(--signal-live)' : 'var(--border-default)', color: playing ? 'var(--signal-live)' : 'var(--text-body)' }
-        }, playing ? 'Pause' : 'Play'),
+        /*#__PURE__*/React.createElement(SpringPress, { onClick: () => select(0), style: ctl, label: 'Reset to first phase' }, 'Reset'),
         /*#__PURE__*/React.createElement('span', {
           className: 'mono', role: 'status',
           style: {
             display: 'inline-flex', alignItems: 'center', gap: 8, marginLeft: 4, padding: '6px 11px',
             fontSize: 11.5, letterSpacing: '0.1em', borderRadius: 'var(--radius-sm)',
-            color: playing ? 'var(--signal-live)' : 'var(--text-muted)',
-            border: '1px solid ' + (playing ? 'var(--signal-live)' : 'var(--border-default)'),
-            background: playing ? 'rgba(56,189,248,0.08)' : 'transparent'
+            color: 'var(--text-muted)', border: '1px solid var(--border-default)'
           }
         },
           /*#__PURE__*/React.createElement('span', {
             'aria-hidden': true,
-            style: { width: 7, height: 7, borderRadius: 999, boxSizing: 'border-box', border: '1.5px solid currentColor', background: playing ? 'currentColor' : 'transparent' }
+            style: { width: 7, height: 7, borderRadius: 999, boxSizing: 'border-box', border: '1.5px solid currentColor' }
           }),
-          playing ? 'ADVANCING · ONE PHASE EVERY 5 S' : 'INACTIVE · PAUSED — PRESS PLAY TO ADVANCE')
+          'INACTIVE · NOT RUNNING — STEP THROUGH THE PHASES MANUALLY')
       ),
 
       /* stage + phase detail */
@@ -497,7 +439,7 @@ function SimulationGround() {
         className: 'freq-stage-grid',
         style: { display: 'grid', gridTemplateColumns: 'minmax(0, 1.35fr) minmax(0, 1fr)', gap: 24, marginTop: 20, alignItems: 'start' }
       },
-        /*#__PURE__*/React.createElement(PhaseStage, { phase: phase, index: i, inspect: inspect, advancing: playing }),
+        /*#__PURE__*/React.createElement(PhaseStage, { phase: phase, index: i, inspect: inspect }),
         /*#__PURE__*/React.createElement('div', {
           style: { display: 'flex', flexDirection: 'column', gap: 0, border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', overflow: 'hidden' }
         },
@@ -645,7 +587,7 @@ window.SimulationGround = SimulationGround;
 function CapabilityInventory() {
   const { Eyebrow } = window.FREQAIDesignSystem_019dc6;
   const rows = [
-    { t: 'State-driven interaction', s: 'in', d: 'One phase index drives the scene, the annotations, the phase record and the readings. Phase tabs, previous/next/reset and play/pause are the only inputs that change it; default is paused and a manual selection always pauses, so there is no autonomous restart.' },
+    { t: 'State-driven interaction', s: 'in', d: 'One phase index drives the scene, the annotations, the phase record and the readings. Phase tabs and previous/next/reset are the only inputs that change it; the walkthrough is inactive and never advances or runs on its own.' },
     { t: 'Physics-based micro-interactions', s: 'in', d: 'Controls run on a critically damped spring integrator (damping ratio 1.0, mass 1): the press response reaches its target and stops, with no overshoot and therefore no bounce. The loop halts on settle rather than running continuously, and is a no-op under reduced motion.' },
     { t: 'Multi-axis parallax inspection', s: 'in', d: 'Two bounded axes inside the simulation viewer only: pointer position, and the viewer’s own position in the viewport as you scroll. Both are clamped to a few per cent of frame, never move page scroll or reading position, and are disabled under reduced motion and below 900px. This is a 2.5D depth warp of a photographic plate, not a 3D asset.' },
     { t: 'Telemetry mapping', s: 'in', d: 'Readings drive the station cards, the calculated figures and the mean-draft chart, all carrying mode (illustrative), source (configured scenario), units and scenario timestamp. Missing-observation handling is implemented and can be previewed: a withheld position is reported missing rather than interpolated, and the calculated figures recompute from the reduced set and say so. No value is animated to look live.' },
