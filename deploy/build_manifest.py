@@ -3,11 +3,11 @@
 Text files are hashed from site/ (the repo copy is byte-identical to what Vercel serves).
 Binary files are not in the repo; they live in the Vercel team's file store and are
 deployed by SHA reference, so their hashes are recorded here as the source of truth.
-Usage: python3 deploy/build_manifest.py <step>   (step: 01 | 02)
+Usage: python3 deploy/build_manifest.py <step>   (step: 01 | 02 | 03)
 """
 import hashlib, json, os, sys
 
-STEP = sys.argv[1] if len(sys.argv) > 1 else '02'
+STEP = sys.argv[1] if len(sys.argv) > 1 else '03'
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 SITE = os.path.join(ROOT, 'site')
 
@@ -35,20 +35,35 @@ BINARY = {
     'assets/pre-survey.jpg': 'fca581bb30dfccc0cca9141067da4099affc860c',
     'assets/sim-barge-402.jpg': '3e904040ae12db0eef3d82acb7bbbf5b8e289a5c',
 }
-# Step 02: PhaseScene's own preference chains ask for assets/crane.jpg and assets/cargo.jpg first;
-# they are deployed as new paths over the existing dedicated phase-03 / phase-04 renders.
-ALIASES = {'assets/crane.jpg': 'assets/phase-03-crane.jpg', 'assets/cargo.jpg': 'assets/phase-04-cargo-v2.jpg'} if STEP >= '02' else {}
+# Step 02 only: PhaseScene's preference chains asked for assets/crane.jpg and assets/cargo.jpg first,
+# so they were deployed as new paths over the phase-03 / phase-04 renders. Step 03 removes the survey
+# view, nothing renders PhaseScene any more, and the two alias paths are gone again.
+ALIASES = {'assets/crane.jpg': 'assets/phase-03-crane.jpg', 'assets/cargo.jpg': 'assets/phase-04-cargo-v2.jpg'} if STEP == '02' else {}
+
+def prod(step):
+    """Label for a step's production deployment, as seen from STEP: the previous step is the rollback target."""
+    if step == STEP:
+        return 'production (current)'
+    return 'production (superseded; instant-rollback target)' if int(step) == int(STEP) - 1 else 'production (superseded)'
 
 DEPLOYMENTS = [
-    {'step': '01', 'id': 'dpl_A4DKwZ6rDBYQB4vZ9bJFc8EQkLGw', 'target': 'production (superseded; instant-rollback target)',
+    {'step': '01', 'id': 'dpl_A4DKwZ6rDBYQB4vZ9bJFc8EQkLGw', 'target': prod('01'),
      'url': 'https://frequency-tera-optimized-7p4pwrnng-freq-systems.vercel.app', 'what': 'byte-identical clone of frequency-mega'},
 ]
 if STEP >= '02':
     DEPLOYMENTS += [
         {'step': '02', 'id': 'dpl_AwdkZ5xVgGSjKBrZ8pFr1NCtZTri', 'target': 'preview',
          'url': 'https://frequency-tera-optimized-1ohhgeoyv-frequency-electro.vercel.app', 'what': 'validation deployment for step 02'},
-        {'step': '02', 'id': 'dpl_71fXbMXmLCt92HSbdXQe9K8uhGkt', 'target': 'production (current)',
-         'url': 'https://frequency-tera-optimized.vercel.app', 'what': 'same SHA set as the step-02 preview'},
+        {'step': '02', 'id': 'dpl_71fXbMXmLCt92HSbdXQe9K8uhGkt', 'target': prod('02'),
+         'url': 'https://frequency-tera-optimized-40ex9gz7n-frequency-electro.vercel.app' if STEP >= '03' else 'https://frequency-tera-optimized.vercel.app',
+         'what': 'same SHA set as the step-02 preview'},
+    ]
+if STEP >= '03':
+    DEPLOYMENTS += [
+        {'step': '03', 'id': 'dpl_4ZUoCSvjeC798CqZsmndNsz6saDS', 'target': 'preview',
+         'url': 'https://frequency-tera-optimized-84brkg6nk-frequency-electro.vercel.app', 'what': 'validation deployment for step 03'},
+        {'step': '03', 'id': 'dpl_HUBqxDSRLqCNPkBUczGtngUajDpj', 'target': prod('03'),
+         'url': 'https://frequency-tera-optimized.vercel.app', 'what': 'same SHA set as the step-03 preview'},
     ]
 
 files = []

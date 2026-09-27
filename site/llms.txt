@@ -21,14 +21,14 @@ An operator approves; the system proposes. Stale observations are shown as stale
 - Mean draft, trim and list are calculated from those readings, not read directly
 
 ## Pages
-- Home: what the product is, the proposed workflow, three steps, founder
+- Home: a live 3D model of one cargo transfer (pedestal crane, clamshell grab, BARGE-402) with its cargo ledger; what the product is, the proposed workflow, three steps, founder
 - Simulation: six-phase cargo-transfer walkthrough, paused by default, operator-driven
 - Architecture: the six layers and where the system stops
 - Investor: problem, scope, workflow, validation status, next milestone, contact
 - Contact: frequency.systems@outlook.com
 
 ## Imagery
-All renders on the site are illustrative and labelled as such. None is a field capture.
+All renders on the site, and the live 3D model on Home, are illustrative and labelled as such. None is a field capture.
 
 ## Contact
 frequency.systems@outlook.com

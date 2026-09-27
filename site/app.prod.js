@@ -546,7 +546,7 @@ function PhaseScene({
         className: "ov-ring"
       }), /*#__PURE__*/React.createElement("div", {
         className: "ov-lock"
-      }, "\u25CF LOCKED")));
+      }, "● LOCKED")));
     }
     if (index === 1) {
       return /*#__PURE__*/React.createElement("div", {
@@ -834,7 +834,7 @@ window.RunProgress = RunProgress;
 
 
 /* ==== HomePage.jsx ==== */
-// Frequency Systems — HOME (hero). The one page with a light parallax background; no other motion.
+// Frequency Systems — HOME. The hero is the live 3D cargo transfer (home-hero.js + harbor-motion.js).
 function HomePage({
   onNav
 }) {
@@ -847,22 +847,6 @@ function HomePage({
     BARGE,
     EMAIL
   } = window.FREQ;
-  const heroRef = React.useRef(null);
-  const [par, setPar] = React.useState({
-    x: 0,
-    y: 0
-  });
-
-  // Light multi-axis parallax — a few pixels only, the only parallax on the site.
-  function onMove(e) {
-    const r = heroRef.current.getBoundingClientRect();
-    const dx = (e.clientX - r.left) / r.width - 0.5;
-    const dy = (e.clientY - r.top) / r.height - 0.5;
-    setPar({
-      x: dx,
-      y: dy
-    });
-  }
   const systems = [{
     icon: 'layers',
     title: 'Operations record',
@@ -889,276 +873,16 @@ function HomePage({
     body: 'Closes each job with the readings, the approvals and the resulting quantity, kept together.'
   }];
   const pipeline = ['Observations', 'Operations record', 'Planning & resource allocation', 'Checks & operator approval', 'Execution interface', 'Outcome record'];
-  const PHASES = [['01', 'PRE-SURVEY'], ['02', 'BALLAST-ADJ'], ['03', 'CRANE-POS'], ['04', 'CARGO-LOAD'], ['05', 'TRIM-CORR'], ['06', 'FINAL-SURV']];
-  const ringNodes = PHASES.map((p, i) => {
-    const a = (-90 + i * 60) * Math.PI / 180;
-    const co = Math.cos(a), si = Math.sin(a);
-    return { n: p[0], k: p[1], x: 260 + 188 * co, y: 260 + 188 * si, lx: 260 + 214 * co, ly: 260 + 214 * si, anchor: co > 0.34 ? 'start' : co < -0.34 ? 'end' : 'middle', active: i === 0 };
-  });
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("section", {
-    ref: heroRef,
-    className: "freq-hero",
-    onMouseMove: onMove,
-    onMouseLeave: () => setPar({
-      x: 0,
-      y: 0
-    }),
-    style: {
-      position: 'relative',
-      overflow: 'hidden',
-      borderBottom: '1px solid var(--border-faint)',
-      minHeight: '92vh',
-      display: 'flex',
-      alignItems: 'center'
-    }
-  },
-  /*#__PURE__*/React.createElement(window.HeroDepth, {
-    src: window.freqImg('investor-hero.jpg')
-  }),
-  /*#__PURE__*/React.createElement("div", {
-    "aria-hidden": true,
-    style: {
-      position: 'absolute',
-      inset: 0,
-      background: 'linear-gradient(90deg, rgba(8,12,24,0.96) 2%, rgba(8,12,24,0.8) 32%, rgba(8,12,24,0.42) 60%, rgba(8,12,24,0.62) 100%)'
-    }
-  }),
-  /*#__PURE__*/React.createElement("div", {
-    "aria-hidden": true,
-    style: {
-      position: 'absolute',
-      inset: 0,
-      background: 'linear-gradient(180deg, rgba(8,12,24,0.66) 0%, transparent 20%, transparent 66%, var(--bg-page) 100%)'
-    }
-  }),
-  /*#__PURE__*/React.createElement("div", {
-    className: "freq-hero-content freq-enter",
-    style: {
-      position: 'relative',
-      width: '100%',
-      maxWidth: 'var(--container-max)',
-      margin: '0 auto',
-      padding: '92px var(--container-pad) 84px',
-      display: 'grid',
-      gridTemplateColumns: 'minmax(0, 1.04fr) minmax(0, 0.96fr)',
-      gap: 'clamp(28px, 5vw, 68px)',
-      alignItems: 'center'
-    }
-  },
-  /*#__PURE__*/React.createElement("div", {
-    className: "freq-hero-copy"
-  }, /*#__PURE__*/React.createElement(Eyebrow, {
-    live: true
-  }, "Inland waterways \xB7 Cargo execution layer"), /*#__PURE__*/React.createElement("h1", {
-    style: {
-      fontSize: 'clamp(40px, 5.4vw, 62px)',
-      lineHeight: 1.03,
-      maxWidth: 600,
-      marginTop: 20
-    }
-  }, "Cargo decisions, grounded in vessel state."), /*#__PURE__*/React.createElement("p", {
-    style: {
-      fontSize: 19,
-      lineHeight: 1.6,
-      color: 'var(--text-body)',
-      maxWidth: 520,
-      marginTop: 22
-    }
-  }, "FREQUENCY Systems is a maritime operational intelligence company building the autonomous cargo execution layer for U.S. inland waterways. Initial focus: one terminal and one cargo-transfer workflow."),
-  /*#__PURE__*/React.createElement("div", {
-    className: "freq-hero-metrics",
-    style: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(4, auto)',
-      gap: 'clamp(16px, 2.6vw, 32px)',
-      marginTop: 30,
-      justifyContent: 'start'
-    }
-  }, [{
-    v: '6',
-    u: 'PHASES',
-    l: 'one cargo transfer'
-  }, {
-    v: '6',
-    u: 'POSITIONS',
-    l: 'draft measurement points'
-  }, {
-    v: '1',
-    u: 'TERMINAL',
-    l: 'initial scope'
-  }, {
-    v: '1',
-    u: 'WORKFLOW',
-    l: 'end to end'
-  }].map(m => /*#__PURE__*/React.createElement("div", {
-    key: m.u
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'flex',
-      alignItems: 'baseline',
-      gap: 5
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontFamily: 'var(--font-display)',
-      fontWeight: 700,
-      fontSize: 'clamp(26px, 3vw, 32px)',
-      lineHeight: 1,
-      color: 'var(--white)'
-    }
-  }, m.v), /*#__PURE__*/React.createElement("span", {
-    className: "mono",
-    style: {
-      fontSize: 12,
-      letterSpacing: '0.08em',
-      color: 'var(--indigo)'
-    }
-  }, m.u)), /*#__PURE__*/React.createElement("div", {
-    className: "mono",
-    style: {
-      fontSize: 10.5,
-      letterSpacing: '0.14em',
-      textTransform: 'uppercase',
-      color: 'var(--text-faint)',
-      marginTop: 7
-    }
-  }, m.l)))),
-  /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'flex',
-      gap: 14,
-      marginTop: 34,
-      flexWrap: 'wrap'
-    }
-  }, /*#__PURE__*/React.createElement(Button, {
-    variant: "primary",
-    size: "lg",
-    onClick: () => onNav('simulation')
-  }, "See Simulation Ground"), /*#__PURE__*/React.createElement(Button, {
-    variant: "secondary",
-    size: "lg",
-    onClick: () => onNav('investor')
-  }, "Investor Brief")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: 34,
-      display: 'flex',
-      alignItems: 'center',
-      gap: 14
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    "aria-hidden": true,
-    style: {
-      width: 34,
-      height: 1,
-      background: 'var(--indigo)',
-      flex: 'none'
-    }
-  }), /*#__PURE__*/React.createElement("span", {
-    className: "mono",
-    style: {
-      fontSize: 12,
-      letterSpacing: '0.22em',
-      color: 'var(--text-muted)',
-      textTransform: 'uppercase'
-    }
-  }, "Inland terminal ", /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: 'var(--indigo)'
-    }
-  }, "\xB7"), " Mississippi River ", /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: 'var(--indigo)'
-    }
-  }, "\xB7"), " BARGE-402 ", /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: 'var(--indigo)'
-    }
-  }, "\xB7"), " Live"))),
-  /*#__PURE__*/React.createElement("div", {
-    className: "freq-hero-viz",
-    style: {
-      position: 'relative',
-      justifySelf: 'center',
-      width: '100%',
-      maxWidth: 520,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      gap: 18
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: { position: 'relative', width: '100%' }
-  }, /*#__PURE__*/React.createElement("svg", {
-    viewBox: "0 0 520 520",
-    role: "img",
-    "aria-label": "Six-phase cargo transfer workflow: 01 Pre-Survey, 02 Ballast Adjustment, 03 Crane Position, 04 Cargo Load, 05 Trim Correction, 06 Final Survey",
-    style: { width: '100%', height: 'auto', overflow: 'visible' }
-  }, /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("radialGradient", {
-    id: "freqCore", cx: "50%", cy: "50%", r: "50%"
-  }, /*#__PURE__*/React.createElement("stop", { offset: "0%", stopColor: "rgba(99,102,241,0.30)" }), /*#__PURE__*/React.createElement("stop", { offset: "100%", stopColor: "rgba(99,102,241,0)" }))), /*#__PURE__*/React.createElement("circle", {
-    cx: 260, cy: 260, r: 120, fill: "url(#freqCore)"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: 260, cy: 260, r: 188, fill: "none", stroke: "var(--indigo-line)", strokeWidth: 1
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: 260, cy: 260, r: 150, fill: "none", stroke: "var(--indigo-line-2)", strokeWidth: 1, strokeDasharray: "2 9"
-  }), /*#__PURE__*/React.createElement("text", {
-    x: 260, y: 249, textAnchor: "middle", className: "mono", style: { fontSize: 12, letterSpacing: "0.3em", fill: "var(--text-muted)" }
-  }, "CARGO"), /*#__PURE__*/React.createElement("text", {
-    x: 260, y: 271, textAnchor: "middle", className: "mono", style: { fontSize: 12, letterSpacing: "0.3em", fill: "var(--text-muted)" }
-  }, "TRANSFER"), /*#__PURE__*/React.createElement("text", {
-    x: 260, y: 300, textAnchor: "middle", style: { fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 17, letterSpacing: "0.04em", fill: "var(--white)" }
-  }, "SIX PHASES"), ringNodes.map(nd => /*#__PURE__*/React.createElement("g", {
-    key: nd.n
-  }, /*#__PURE__*/React.createElement("circle", {
-    cx: nd.x, cy: nd.y, r: 21, fill: "var(--bg-page)", stroke: nd.active ? "var(--signal-live)" : "var(--indigo-line)", strokeWidth: nd.active ? 2 : 1, style: nd.active ? { filter: "drop-shadow(0 0 8px var(--live-glow))" } : {}
-  }), /*#__PURE__*/React.createElement("text", {
-    x: nd.x, y: nd.y + 5, textAnchor: "middle", className: "mono", style: { fontSize: 14, fontWeight: 600, fill: nd.active ? "var(--signal-live)" : "var(--text-strong)" }
-  }, nd.n), /*#__PURE__*/React.createElement("text", {
-    x: nd.lx, y: nd.ly + 4, textAnchor: nd.anchor, className: "mono", style: { fontSize: 10.5, letterSpacing: "0.08em", fill: nd.active ? "var(--text-strong)" : "var(--text-muted)" }
-  }, nd.k)))), /*#__PURE__*/React.createElement("div", {
-    className: "freq-hud",
-    style: {
-      position: 'absolute',
-      top: '1%',
-      left: '0%',
-      width: 194,
-      padding: '13px 15px',
-      background: 'rgba(8,12,24,0.74)',
-      border: '1px solid var(--indigo-line)',
-      borderRadius: 'var(--radius-md)',
-      backdropFilter: 'blur(8px)',
-      WebkitBackdropFilter: 'blur(8px)',
-      boxShadow: 'var(--shadow-panel)'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "mono", style: { fontSize: 12, letterSpacing: "0.16em", color: "var(--text-strong)", marginBottom: 9 }
-  }, "BARGE-402"), [["DRAFT", "11.80 ft"], ["LIST", "0.0\xB0"], ["HOLD FILL", "0%"]].map(r => /*#__PURE__*/React.createElement("div", {
-    key: r[0], className: "mono", style: { display: "flex", justifyContent: "space-between", fontSize: 11.5, padding: "3px 0" }
-  }, /*#__PURE__*/React.createElement("span", { style: { color: "var(--text-muted)" } }, r[0]), /*#__PURE__*/React.createElement("span", { style: { color: "var(--white)" } }, r[1]))), /*#__PURE__*/React.createElement("div", {
-    "aria-hidden": true, style: { height: 1, background: "var(--border-faint)", margin: "9px 0" }
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "mono", style: { display: "flex", alignItems: "center", gap: 7, fontSize: 11.5, color: "var(--signal-live)" }
-  }, /*#__PURE__*/React.createElement("span", {
-    "aria-hidden": true, style: { width: 7, height: 7, borderRadius: "999px", background: "var(--signal-live)", boxShadow: "var(--glow-live-dot)", flex: "none" }
-  }), "SCENARIO VALUES"), /*#__PURE__*/React.createElement("div", {
-    className: "mono", style: { fontSize: 11.5, color: "var(--text-body)", marginTop: 8 }
-  }, "6 PHASES \u2192 1 RECORD"), /*#__PURE__*/React.createElement("div", {
-    className: "mono", style: { fontSize: 11.5, color: "var(--white)", marginTop: 4 }
-  }, "ILLUSTRATIVE"))), /*#__PURE__*/React.createElement("div", {
-    style: { display: "flex", alignItems: "center", gap: 12 }
-  }, /*#__PURE__*/React.createElement("svg", {
-    width: 34, height: 12, viewBox: "0 0 34 12", "aria-hidden": true
-  }, /*#__PURE__*/React.createElement("path", {
-    d: "M0 6 H8 L11 1 L15 11 L19 3 L22 6 H34", fill: "none", stroke: "var(--indigo)", strokeWidth: 1.5
-  })), /*#__PURE__*/React.createElement("span", {
-    className: "mono", style: { fontSize: 11, letterSpacing: "0.2em", color: "var(--text-muted)", textTransform: "uppercase" }
-  }, "Frequency \xB7 Reliability \xB7 Execution \xB7 Quality"))))), /*#__PURE__*/React.createElement("section", {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(window.HarborHero, {
+    onNav: onNav
+  }), /*#__PURE__*/React.createElement("section", {
     style: {
       maxWidth: 'var(--container-max)',
       margin: '0 auto',
       padding: 'var(--space-9) var(--container-pad) 0'
     }
   }, /*#__PURE__*/React.createElement(Eyebrow, null, "The System"), /*#__PURE__*/React.createElement("div", {
+    className: "freq-system-grid",
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(3, 1fr)',
@@ -1295,7 +1019,7 @@ function HomePage({
       lineHeight: 1.1,
       maxWidth: 560
     }
-  }, "An operator's throughline \u2014 build the system, then prove it."), /*#__PURE__*/React.createElement("p", {
+  }, "An operator's throughline — build the system, then prove it."), /*#__PURE__*/React.createElement("p", {
     style: {
       fontSize: 17,
       lineHeight: 1.65,
@@ -1303,7 +1027,7 @@ function HomePage({
       maxWidth: 620,
       marginTop: 20
     }
-  }, "Frequency Systems is led by a founder who builds ventures from the ground up. D-FREQ launched in April 2024 in the fitness industry \u2014 a first company that set the operating discipline behind everything since: ship a real product, measure it honestly, and let the numbers decide."), /*#__PURE__*/React.createElement("p", {
+  }, "Frequency Systems is led by a founder who builds ventures from the ground up. D-FREQ launched in April 2024 in the fitness industry — a first company that set the operating discipline behind everything since: ship a real product, measure it honestly, and let the numbers decide."), /*#__PURE__*/React.createElement("p", {
     style: {
       fontSize: 17,
       lineHeight: 1.65,
@@ -1311,7 +1035,7 @@ function HomePage({
       maxWidth: 620,
       marginTop: 16
     }
-  }, "In 2025 that discipline moved to maritime infrastructure. What began as a starter venture is now a deliberate bridge into autonomous cargo intelligence \u2014 carrying the same conviction into a domain where precision is measured in hundredths of a foot and every claim is verified against sensor truth."), /*#__PURE__*/React.createElement("div", {
+  }, "In 2025 that discipline moved to maritime infrastructure. What began as a starter venture is now a deliberate bridge into autonomous cargo intelligence — carrying the same conviction into a domain where precision is measured in hundredths of a foot and every claim is verified against sensor truth."), /*#__PURE__*/React.createElement("div", {
     className: "freq-about-timeline",
     style: {
       display: 'flex',
@@ -1503,7 +1227,7 @@ function ArchitecturePage() {
     }
   }, /*#__PURE__*/React.createElement(window.ArchPlate, {
     src: window.freqImg('architecture-diagram.jpg'),
-    alt: "Illustrative render \u2014 the six layers of the system, from observations to the outcome record"
+    alt: "Illustrative render — the six layers of the system, from observations to the outcome record"
   }), /*#__PURE__*/React.createElement("div", {
     "aria-hidden": true,
     style: {
@@ -1540,7 +1264,7 @@ function ArchitecturePage() {
       textTransform: 'uppercase',
       color: 'var(--text-muted)'
     }
-  }, "Illustrative render \xB7 six layers \xB7 L1 observations \u2192 L6 outcome record"))), /*#__PURE__*/React.createElement("div", {
+  }, "Illustrative render \xB7 six layers \xB7 L1 observations → L6 outcome record"))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(3, 1fr)',
@@ -1843,7 +1567,7 @@ function InvestorPage({
       marginTop: 22,
       animationDelay: '90ms'
     }
-  }, "The product is a cargo-operations decision system for inland terminals. The six-phase walkthrough on the Simulation page is its validation environment, running configured scenario values \u2014 not a record of field performance."))), /*#__PURE__*/React.createElement(window.OpsSystem, null), /*#__PURE__*/React.createElement(window.InvestorPath, {
+  }, "The product is a cargo-operations decision system for inland terminals. The six-phase walkthrough on the Simulation page is its validation environment, running configured scenario values — not a record of field performance."))), /*#__PURE__*/React.createElement(window.OpsSystem, null), /*#__PURE__*/React.createElement(window.InvestorPath, {
     onNav: onNav
   }), /*#__PURE__*/React.createElement("section", {
     style: {
@@ -2014,7 +1738,7 @@ function InvestorPage({
       lineHeight: 1.6,
       maxWidth: 560
     }
-  }, "BARGE-402 metrics are locked. Review the system with Frequency Systems \u2014 every figure here is the live number the system runs on; no separate marketing data path."), /*#__PURE__*/React.createElement("a", {
+  }, "BARGE-402 metrics are locked. Review the system with Frequency Systems — every figure here is the live number the system runs on; no separate marketing data path."), /*#__PURE__*/React.createElement("a", {
     href: `mailto:${EMAIL}`,
     className: "mono",
     style: {
@@ -2179,7 +1903,7 @@ function ContactPage() {
       fontSize: 13,
       color: 'var(--status-active)'
     }
-  }, "Request captured \u2014 Frequency Systems will reply from ", EMAIL, "."))), /*#__PURE__*/React.createElement("aside", {
+  }, "Request captured — Frequency Systems will reply from ", EMAIL, "."))), /*#__PURE__*/React.createElement("aside", {
     style: {
       background: 'var(--surface-card)',
       border: '1px solid var(--border-default)',

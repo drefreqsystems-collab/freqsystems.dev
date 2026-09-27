@@ -5,7 +5,7 @@
     "team": "team_X5LI2up5bH06FG6XJI2w5ToR",
     "productionUrl": "https://frequency-tera-optimized.vercel.app"
   },
-  "step": "02",
+  "step": "03",
   "baselineSource": {
     "project": "frequency-mega",
     "deployment": "dpl_9frhjqZ7DK6dVqVULkbpjM9tnC94"
@@ -14,7 +14,7 @@
     {
       "step": "01",
       "id": "dpl_A4DKwZ6rDBYQB4vZ9bJFc8EQkLGw",
-      "target": "production (superseded; instant-rollback target)",
+      "target": "production (superseded)",
       "url": "https://frequency-tera-optimized-7p4pwrnng-freq-systems.vercel.app",
       "what": "byte-identical clone of frequency-mega"
     },
@@ -28,12 +28,26 @@
     {
       "step": "02",
       "id": "dpl_71fXbMXmLCt92HSbdXQe9K8uhGkt",
+      "target": "production (superseded; instant-rollback target)",
+      "url": "https://frequency-tera-optimized-40ex9gz7n-frequency-electro.vercel.app",
+      "what": "same SHA set as the step-02 preview"
+    },
+    {
+      "step": "03",
+      "id": "dpl_4ZUoCSvjeC798CqZsmndNsz6saDS",
+      "target": "preview",
+      "url": "https://frequency-tera-optimized-84brkg6nk-frequency-electro.vercel.app",
+      "what": "validation deployment for step 03"
+    },
+    {
+      "step": "03",
+      "id": "dpl_HUBqxDSRLqCNPkBUczGtngUajDpj",
       "target": "production (current)",
       "url": "https://frequency-tera-optimized.vercel.app",
-      "what": "same SHA set as the step-02 preview"
+      "what": "same SHA set as the step-03 preview"
     }
   ],
-  "fileCount": 43,
+  "fileCount": 44,
   "files": [
     {
       "path": "_ds_bundle.js",
@@ -43,8 +57,8 @@
     },
     {
       "path": "app.prod.js",
-      "sha1": "0bbf2a421ab60cd8b1066d22d4851b24a75ce5e5",
-      "bytes": 72930,
+      "sha1": "6f8bcecaff4bedceeaeed9cd086d77e4558a9f8c",
+      "bytes": 61665,
       "inRepo": true
     },
     {
@@ -73,21 +87,9 @@
       "inRepo": false
     },
     {
-      "path": "assets/cargo.jpg",
-      "sha1": "65ded16a635b44305b34cfc5ad7bfd5de7b5cb17",
-      "inRepo": false,
-      "aliasOf": "assets/phase-04-cargo-v2.jpg"
-    },
-    {
       "path": "assets/contact-hero.jpg",
       "sha1": "0657af90b913b63ad0f12604e6b0a101a702c174",
       "inRepo": false
-    },
-    {
-      "path": "assets/crane.jpg",
-      "sha1": "27f15d2dba9c89422cc2896ffd39cbb83cd79275",
-      "inRepo": false,
-      "aliasOf": "assets/phase-03-crane.jpg"
     },
     {
       "path": "assets/favicon-16.png",
@@ -177,9 +179,33 @@
       "inRepo": false
     },
     {
+      "path": "harbor-kit.js",
+      "sha1": "9d7a50ea832d3e0661d90ea74d1184ab8c93f3d1",
+      "bytes": 23906,
+      "inRepo": true
+    },
+    {
+      "path": "harbor-motion.js",
+      "sha1": "cf7b7209785b99642254cc58576c7eff092575d7",
+      "bytes": 42608,
+      "inRepo": true
+    },
+    {
+      "path": "harbor-scene.js",
+      "sha1": "135b9f2e9f9b2d70353a38374bbf1c6cb71f7de6",
+      "bytes": 43194,
+      "inRepo": true
+    },
+    {
       "path": "harbor-stage.js",
       "sha1": "7ddf09a0dc6339e42544cbff01e02257c75b66fb",
       "bytes": 44275,
+      "inRepo": true
+    },
+    {
+      "path": "home-hero.js",
+      "sha1": "968291dadd03108714e03b908ce159253b91a157",
+      "bytes": 8777,
       "inRepo": true
     },
     {
@@ -190,14 +216,14 @@
     },
     {
       "path": "index.html",
-      "sha1": "f7dfceb2c54562e5f12f0dcfaa31451f0f5a68a4",
-      "bytes": 18336,
+      "sha1": "5ee46b1f2154f0fcbcced9c208ec2459292025fc",
+      "bytes": 26279,
       "inRepo": true
     },
     {
       "path": "llms.txt",
-      "sha1": "3174bd3e0af2070e808cc6a50cf86ad95c97f582",
-      "bytes": 1873,
+      "sha1": "c76b20c6522a3e5e5843384f10e229e5ab62ecc4",
+      "bytes": 2010,
       "inRepo": true
     },
     {
@@ -222,12 +248,6 @@
       "path": "styles.css",
       "sha1": "44d76d52e780300d8301a6593237f839490382ce",
       "bytes": 385,
-      "inRepo": true
-    },
-    {
-      "path": "survey-simulation.js",
-      "sha1": "bc3d6c0ee486429aac3a95a1e9acb77c385f9725",
-      "bytes": 11951,
       "inRepo": true
     },
     {
