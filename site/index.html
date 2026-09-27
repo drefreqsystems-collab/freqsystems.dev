@@ -210,13 +210,12 @@
     .freq-investor-hero img { transform: scale(1.06); }
   }
   @media (max-width: 760px) { .freq-emblem { display: none !important; } }
-  /* Architecture header mark: the orbital core fades into the page instead of sitting in a hard-edged,
-     double-outlined badge whose square night-sky background never matched the page. */
+  /* Architecture header mark: the complete orbital-core brand mark in a clean app-icon tile, the same
+     presentation as the site icon. Replaces a circular crop that clipped its rings, with a double outline
+     and an electric-blue glow (electric blue is reserved for live data). */
   .freq-emblem > div:first-child {
-    border: 0 !important; box-shadow: none !important;
-    background-size: 124% !important; background-position: 47% 46% !important;
-    -webkit-mask-image: radial-gradient(circle closest-side, #000 62%, rgba(0,0,0,0.55) 80%, transparent 100%);
-    mask-image: radial-gradient(circle closest-side, #000 62%, rgba(0,0,0,0.55) 80%, transparent 100%);
+    border-radius: 22% !important; background-size: cover !important; background-position: 50% 50% !important;
+    border: 1px solid var(--indigo-line) !important; box-shadow: var(--shadow-raised) !important;
   }
   .freq-emblem > div[aria-hidden] { display: none; }
 
@@ -381,9 +380,9 @@
   <script src="depthstage.js"></script>
   <script src="home-sections.js"></script>
   <script src="home-hero.js"></script>
-  <script src="simulation-ground.js"></script>
+  <script src="simulation-ground.js?v=r2"></script>
   <script type="module" src="harbor-motion.js"></script>
-  <script type="module" src="harbor-stage.js"></script>
+  <script type="module" src="harbor-stage.js?v=r2"></script>
 
   <script>window.FREQ_IMG={};window.freqImg=function(r){return "assets/"+String(r).replace(/^.*\//,"");};</script>
   <script src="app.prod.js"></script>
