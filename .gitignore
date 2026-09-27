@@ -1,0 +1,6 @@
+tools/verify/vendor/
+tools/verify/fixtures/
+tools/verify/fixtures_after/
+tools/verify/out/
+tools/verify/.before/
+tools/verify/__pycache__/

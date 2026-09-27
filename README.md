@@ -29,6 +29,7 @@ state (no router, no per-page URLs). Five pages: Home, Simulation, Architecture,
 | `depthstage.js` | 2.5D WebGL camera for photoreal plates (`FreqDepthStage.create/setPhase/destroy`) |
 | `home-sections.js` | Image-led Home / Investor sections |
 | `simulation-ground.js` | Operator-driven walkthrough, measurement positions, capability inventory |
+| `survey-simulation.js` | Six-phase survey view (from freqarena) and the Simulation page's view switch — step 02 |
 | `harbor-stage.js` | `<harbor-stage>` custom element — Three.js 0.169.0 operational model (ES module) |
 | `app.prod.js` | App shell and pages (pre-transpiled JSX) |
 | `styles.css`, `tokens/*.css` | Design tokens: colour, type, spacing, effects, fonts |
@@ -63,6 +64,15 @@ Never point `freqsystems.dev` (or any live domain) at this project without the o
 | Step | What | Report |
 |---|---|---|
 | 01 | Byte-identical clone of the baseline into the new project | `deploy/CHANGE-REPORT-01-baseline-clone.md` |
+| 02 | freqarena's six-phase survey design on the Simulation page (default view), next to the original walkthrough | `deploy/CHANGE-REPORT-02-survey-simulation.md` |
+
+## Verifying a change
+
+`tools/verify/run.sh [baseline-commit]` serves the current `site/` and a baseline `site/` exported
+from git, with placeholder plates, and runs the Playwright checks (telemetry values, view switch,
+phone and tablet layout, reduced motion, WebGL off, console and network errors). It needs Node,
+Playwright with Chromium, Python 3 and Pillow; CDN libraries are fetched from npm at the versions
+the site pins.
 
 ## Known issues carried from the baseline
 
@@ -73,6 +83,7 @@ Never point `freqsystems.dev` (or any live domain) at this project without the o
   2026-09-26), so the byte-for-byte comparison target in the handoff no longer exists.
 - **Dead image references.** `_ds_bundle.js` still names `hero-core.jpg` and
   `freq-brand-logo.png`; Home intermittently logs a 404 for `hero-core.jpg` (handoff P2 #9).
+  Step 02 resolved the `crane` / `cargo` chains only.
 - **Mobile header.** The header nav is ~470 px wide and overflows a 390 px viewport
   (document width 708 px) on every page.
 - **Unpinned Lucide.** Loaded from `lucide@latest` (resolved to 1.48.0 when tested).
